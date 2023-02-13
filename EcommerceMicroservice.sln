@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.catalog", "sdu.bachelor.microservice.catalog\sdu.bachelor.microservice.catalog.csproj", "{AA78033E-B75F-4238-A577-DD8D38C87CA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.order", "sdu.bachelor.microservice.order\sdu.bachelor.microservice.order.csproj", "{57C51AD8-6A29-4E57-87C8-0ABE217EA662}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -33,5 +35,17 @@ Global
 		{AA78033E-B75F-4238-A577-DD8D38C87CA5}.Release|x64.Build.0 = Release|Any CPU
 		{AA78033E-B75F-4238-A577-DD8D38C87CA5}.Release|x86.ActiveCfg = Release|Any CPU
 		{AA78033E-B75F-4238-A577-DD8D38C87CA5}.Release|x86.Build.0 = Release|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Debug|x64.Build.0 = Debug|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Debug|x86.Build.0 = Debug|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Release|x64.ActiveCfg = Release|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Release|x64.Build.0 = Release|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Release|x86.ActiveCfg = Release|Any CPU
+		{57C51AD8-6A29-4E57-87C8-0ABE217EA662}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
