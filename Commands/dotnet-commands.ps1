@@ -1,5 +1,5 @@
 #Creating api's
-dotnet new webapi -o "sample.microservice.{project}"
+dotnet new webapi -o "sdu.bachelor.microservice.{project}"
 
 #Creating class libraries
 dotnet new classlib -o {lib}
