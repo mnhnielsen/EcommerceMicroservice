@@ -1,0 +1,2 @@
+#Basket Service
+dapr run --app-id basket-service --app-port "5001" --dapr-http-port 3601 --components-path "./components" -- dotnet run --project ./sdu.bachelor.microservice.basket/sdu.bachelor.microservice.basket.csproj
