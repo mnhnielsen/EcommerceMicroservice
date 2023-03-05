@@ -52,7 +52,6 @@ namespace sdu.bachelor.microservice.catalog.Controllers
         public async Task<IActionResult> Reserve([FromServices] DaprClient daprClient,[FromBody] Reservation reservation)
         {
             var productToReserve = await _catalogRepository.GetProductAsync(reservation.ProductId);
-            Console.WriteLine(reservation.Quantity);
 
             if(productToReserve== null)
             {
@@ -60,11 +59,11 @@ namespace sdu.bachelor.microservice.catalog.Controllers
             }
 
             CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken cancellationTokencancellationToken = source.Token;
+            CancellationToken cancellationToken = source.Token;
 
             if (productToReserve.Stock < reservation.Quantity)
             {
-                await daprClient.PublishEventAsync(PubSubName, Topics.On_Reservation_Failed, reservation, cancellationTokencancellationToken);
+                await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Reserved_Failed, reservation, cancellationToken);
                 Console.WriteLine("Not enough stock, rolling back events.");
                 return NotFound();
             }
@@ -76,6 +75,29 @@ namespace sdu.bachelor.microservice.catalog.Controllers
             await _catalogRepository.SaveChangesAsync();
             Console.WriteLine($"{reservation.Quantity} of the product {productToReserve.Title} has been reserved for the customer {reservation.CustomerId} at date: {DateTime.UtcNow}");
 
+            return Ok();
+        }
+
+        [Topic(PubSubName, Topics.On_Product_Removed_From_Basket)]
+        [HttpPost("addstock")]
+        public async Task<IActionResult> AddStock([FromBody] Reservation reservation)
+        {
+            var productToModify = await _catalogRepository.GetProductAsync(reservation.ProductId);
+
+
+            if (productToModify == null)
+            {
+                return NotFound();
+            }
+
+            var quantity = reservation.Quantity;
+
+            productToModify.Stock += quantity;
+            await _catalogRepository.SaveChangesAsync();
+            Console.WriteLine($"Order cancelled: {quantity} was added to {productToModify.Title}");
+
+
+            //Remove from reservationtable?
             return Ok();
         }
     }

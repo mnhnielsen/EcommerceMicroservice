@@ -1,4 +1,5 @@
 ﻿using sdu.bachelor.microservice.catalog.Entities;
+using System.Net;
 
 namespace sdu.bachelor.microservice.basket.Controllers
 {
@@ -17,7 +18,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
         [HttpPost("checkout")]
         public async Task<ActionResult<Guid>> CheckoutOrder([FromServices] DaprClient daprClient)
-        {   
+        {
             //Test guid 
             var basketOrderID = Guid.NewGuid();
 
@@ -25,7 +26,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
             CancellationToken cancellationToken = source.Token;
 
             //public event to topic
-            await daprClient.PublishEventAsync(PubSubName,Topics.On_Basket_Checkout, basketOrderID, cancellationToken);
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Basket_Checkout, basketOrderID, cancellationToken);
 
             Console.WriteLine("Checkout Event published with ID: " + basketOrderID);
             return basketOrderID;
@@ -40,7 +41,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
             //Save in redis cache
             await daprClient.SaveStateAsync(BasketStoreName, reservation.OrderId.ToString(), reservation);
-            
+
 
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken cancellationToken = source.Token;
@@ -53,7 +54,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
             return Ok(reservation);
         }
 
-        [Topic(PubSubName, Topics.On_Product_Reserved)]
+        [Topic(PubSubName, Topics.On_Product_Reserved_Failed)]
         [HttpPost("reservefailed")]
         public async Task<ActionResult> ReservationFailed([FromServices] DaprClient daprClient, [FromBody] Reservation reservation)
         {
@@ -67,10 +68,34 @@ namespace sdu.bachelor.microservice.basket.Controllers
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken cancellationToken = source.Token;
 
-            await daprClient.DeleteStateAsync(BasketStoreName, result.OrderId.ToString(), cancellationToken:cancellationToken);
+            await daprClient.DeleteStateAsync(BasketStoreName, result.OrderId.ToString(), cancellationToken: cancellationToken);
 
             Console.WriteLine($"{result.OrderId} was deleted from the basket service");
             return Ok();
+        }
+
+        [HttpPost("removeproduct/{id}")]
+        public async Task<ActionResult> RemoveProductFromBasket([FromServices] DaprClient daprClient, Guid id)
+        {
+            var reservation = await daprClient.GetStateAsync<Reservation>(BasketStoreName, id.ToString());
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken cancellationToken = source.Token;
+
+            await daprClient.DeleteStateAsync(BasketStoreName, reservation.OrderId.ToString(), cancellationToken: cancellationToken);
+
+            Console.WriteLine($"{reservation.OrderId} was deleted from the basket service");
+
+            //Publish event
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Removed_From_Basket, reservation, cancellationToken);
+
+
+            return Ok(HttpStatusCode.Accepted);
         }
 
         //Modify Basket (Update state in redis cache)
