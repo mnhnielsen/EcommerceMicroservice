@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace sdu.bachelor.microservice.catalog.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,9 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 2500, nullable: true),
-                    BrandId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    BrandId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Price = table.Column<double>(type: "REAL", nullable: false),
+                    Stock = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,12 +59,12 @@ namespace sdu.bachelor.microservice.catalog.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "BrandId", "Description", "Title" },
+                columns: new[] { "Id", "BrandId", "Description", "Price", "Stock", "Title" },
                 values: new object[,]
                 {
-                    { new Guid("7201fd50-25b9-4b7d-99a7-b367b73222f8"), new Guid("cd3eb3f1-0143-495b-9b90-9d1e8e46fbad"), "High-End aero bike for the flats", "Madone" },
-                    { new Guid("ab0f5a1f-9b48-4862-8e6a-bced8d20558e"), new Guid("e29de237-8203-4e3e-8066-4ac71d2c707f"), "For the mountains", "Vam" },
-                    { new Guid("d4b1d999-862d-4cf9-bcb7-b79de08768b9"), new Guid("e57ed7c0-4cc5-4d12-a88b-ed9f2997d918"), "Made for winning", "V4Rs" }
+                    { new Guid("7201fd50-25b9-4b7d-99a7-b367b73222f8"), new Guid("cd3eb3f1-0143-495b-9b90-9d1e8e46fbad"), "High-End aero bike for the flats", 10000.0, 50, "Madone" },
+                    { new Guid("ab0f5a1f-9b48-4862-8e6a-bced8d20558e"), new Guid("e29de237-8203-4e3e-8066-4ac71d2c707f"), "For the mountains", 11000.0, 50, "Vam" },
+                    { new Guid("d4b1d999-862d-4cf9-bcb7-b79de08768b9"), new Guid("e57ed7c0-4cc5-4d12-a88b-ed9f2997d918"), "Made for winning", 12000.0, 50, "V4Rs" }
                 });
 
             migrationBuilder.CreateIndex(

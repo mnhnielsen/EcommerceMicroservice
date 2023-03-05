@@ -11,8 +11,8 @@ using sdu.bachelor.microservice.catalog.DbContexts;
 namespace sdu.bachelor.microservice.catalog.Migrations
 {
     [DbContext(typeof(ProductsContext))]
-    [Migration("20230303201223_AddedPrice")]
-    partial class AddedPrice
+    [Migration("20230305215050_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,9 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("Stock")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -87,6 +90,7 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                             BrandId = new Guid("cd3eb3f1-0143-495b-9b90-9d1e8e46fbad"),
                             Description = "High-End aero bike for the flats",
                             Price = 10000.0,
+                            Stock = 50,
                             Title = "Madone"
                         },
                         new
@@ -95,6 +99,7 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                             BrandId = new Guid("e57ed7c0-4cc5-4d12-a88b-ed9f2997d918"),
                             Description = "Made for winning",
                             Price = 12000.0,
+                            Stock = 50,
                             Title = "V4Rs"
                         },
                         new
@@ -103,6 +108,7 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                             BrandId = new Guid("e29de237-8203-4e3e-8066-4ac71d2c707f"),
                             Description = "For the mountains",
                             Price = 11000.0,
+                            Stock = 50,
                             Title = "Vam"
                         });
                 });
