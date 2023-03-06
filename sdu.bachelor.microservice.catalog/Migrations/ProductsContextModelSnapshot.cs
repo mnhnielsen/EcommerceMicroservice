@@ -87,7 +87,7 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                             BrandId = new Guid("cd3eb3f1-0143-495b-9b90-9d1e8e46fbad"),
                             Description = "High-End aero bike for the flats",
                             Price = 10000.0,
-                            Stock = 50,
+                            Stock = 100,
                             Title = "Madone"
                         },
                         new
@@ -96,7 +96,7 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                             BrandId = new Guid("e57ed7c0-4cc5-4d12-a88b-ed9f2997d918"),
                             Description = "Made for winning",
                             Price = 12000.0,
-                            Stock = 50,
+                            Stock = 100,
                             Title = "V4Rs"
                         },
                         new
@@ -105,7 +105,7 @@ namespace sdu.bachelor.microservice.catalog.Migrations
                             BrandId = new Guid("e29de237-8203-4e3e-8066-4ac71d2c707f"),
                             Description = "For the mountains",
                             Price = 11000.0,
-                            Stock = 50,
+                            Stock = 100,
                             Title = "Vam"
                         });
                 });
