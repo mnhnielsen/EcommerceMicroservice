@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace sdu.bachelor.microservice.catalog.Migrations
 {
     /// <inheritdoc />
-    public partial class initmigration : Migration
+    public partial class newDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

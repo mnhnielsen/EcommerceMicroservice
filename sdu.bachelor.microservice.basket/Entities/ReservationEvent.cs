@@ -1,9 +1,8 @@
-﻿namespace sdu.bachelor.microservice.catalog.Entities;
+﻿namespace sdu.bachelor.microservice.basket.Entities;
 
-public class Reservation
+public class ReservationEvent
 {
     public Guid CustomerId { get; set; }
     public int Quantity { get; set; }
     public Guid ProductId { get; set; }
-
 }

@@ -49,36 +49,32 @@ namespace sdu.bachelor.microservice.catalog.Controllers
 
         [Topic(PubSubName, Topics.On_Product_Reserved)]
         [HttpPost()]
-        public async Task<IActionResult> Reserve([FromServices] DaprClient daprClient,[FromBody] IEnumerable<Reservation> reservations)
+        public async Task<IActionResult> Reserve([FromServices] DaprClient daprClient,[FromBody] Reservation reservation)
         {
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken cancellationToken = source.Token;
 
 
-            foreach (var item in reservations)
+            var productToReserve = await _catalogRepository.GetProductAsync(reservation.ProductId);
+            if (productToReserve == null)
             {
-                var productToReserve = await _catalogRepository.GetProductAsync(item.ProductId);
-                if (productToReserve == null)
-                {
-                    return NotFound();
-                }
-
-                if (productToReserve.Stock < item.Quantity)
-                {
-                    await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Reserved_Failed, item, cancellationToken);
-                    Console.WriteLine("Not enough stock, rolling back events.");
-                    return NotFound();
-                }
-
-
-                //Subtract from database
-
-                productToReserve.Stock -= item.Quantity;
-                await _catalogRepository.SaveChangesAsync();
-                Console.WriteLine($"{item.Quantity} of the product {productToReserve.Title} has been reserved for the customer {item.CustomerId} at date: {DateTime.UtcNow}");
-                //Add to Reservation table
-
+                return NotFound();
             }
+
+            if (productToReserve.Stock < reservation.Quantity)
+            {
+                await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Reserved_Failed, reservation, cancellationToken);
+                Console.WriteLine("Not enough stock, rolling back events.");
+                return NotFound();
+            }
+
+
+            //Subtract from database
+
+            productToReserve.Stock -= reservation.Quantity;
+            await _catalogRepository.SaveChangesAsync();
+            Console.WriteLine($"{reservation.Quantity} of the product {productToReserve.Title} has been reserved for the customer {reservation.CustomerId} at date: {DateTime.UtcNow}");
+            //Add to Reservation table
 
             return Ok();
         }
