@@ -11,8 +11,8 @@ using sdu.bachelor.microservice.catalog.DbContexts;
 namespace sdu.bachelor.microservice.catalog.Migrations
 {
     [DbContext(typeof(ProductsContext))]
-    [Migration("20230307091909_newDatabase")]
-    partial class newDatabase
+    [Migration("20230309143736_initDB")]
+    partial class initDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
