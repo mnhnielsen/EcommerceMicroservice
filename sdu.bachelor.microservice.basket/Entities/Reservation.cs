@@ -3,6 +3,7 @@
 public class Reservation
 {
     public Guid OrderId { get; set; }
-    public Guid CustomerId { get; set; }
+    public Guid CustomerId { get; set; } 
     public List<OrderItem> Products { get; set; }
+
 }
