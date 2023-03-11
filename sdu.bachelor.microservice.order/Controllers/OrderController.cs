@@ -17,14 +17,14 @@ namespace sdu.bachelor.microservice.order.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetOrderById(Guid id)
+        public Task<ActionResult> GetOrderById(Guid id)
         {
             throw new NotImplementedException(nameof(GetOrderById));
         }
 
         [Topic(PubSubName, Topics.On_Checkout)]
         [HttpPost()]
-        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient)
+        public Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient)
         {
 
             //Publish On_Order_Submit
@@ -33,14 +33,14 @@ namespace sdu.bachelor.microservice.order.Controllers
         }
 
         [HttpPost()]
-        public async Task<ActionResult> CancelOrder([FromServices] DaprClient daprClient)
+        public Task<ActionResult> CancelOrder([FromServices] DaprClient daprClient)
         {
             throw new NotImplementedException(nameof(CancelOrder));
         }
 
         [Topic(PubSubName, Topics.On_Order_Paid)]
         [HttpPost()]
-        public async Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient)
+        public Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient)
         {
             throw new NotImplementedException(nameof(OrderPaidStatus));
 

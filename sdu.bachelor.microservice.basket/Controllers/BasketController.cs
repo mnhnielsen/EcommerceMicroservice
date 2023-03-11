@@ -123,7 +123,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
         [Topic(PubSubName, Topics.On_Order_Submit)]
         [HttpPost("ordersubmitted")]
-        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient)
+        public Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient)
         {
             throw new NotImplementedException();
         }

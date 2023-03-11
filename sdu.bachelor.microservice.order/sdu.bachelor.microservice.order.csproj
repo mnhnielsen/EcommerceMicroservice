@@ -16,4 +16,9 @@
     <ProjectReference Include="..\sdu.bachelor.microservice.common\sdu.bachelor.microservice.common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Entities\" />
+  </ItemGroup>
+
 </Project>
