@@ -21,7 +21,17 @@ namespace sdu.bachelor.microservice.basket.Controllers
         [HttpPost("reserve")]
         public async Task<ActionResult> AddProductToBasket([FromServices] DaprClient daprClient, [FromBody] Reservation reservation)
         {
+            var state = await daprClient.GetStateEntryAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
 
+            if (state.Value is not null)
+            { 
+
+                state.Value = reservation;
+                await state.SaveAsync();
+            }
+
+
+            
             //Save in redis cache
             await daprClient.SaveStateAsync(BasketStoreName, reservation.CustomerId.ToString(), reservation);
             Console.WriteLine("Reservation Saved to Cache");
@@ -43,6 +53,20 @@ namespace sdu.bachelor.microservice.basket.Controllers
                 Console.WriteLine($"Product with id {item.ProductId} for customer with id {result.CustomerId} reserved with order id of {result.OrderId}");
             }
             return Ok(reservation);
+        }
+
+        [HttpPost("update")]
+        public async Task<ActionResult> UpdateBasket([FromServices] DaprClient daprClient, [FromBody] Reservation reservation)
+        {
+            var state = await daprClient.GetStateEntryAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
+
+            if (state == null)
+            {
+                return NotFound();
+            }
+            state.Value = reservation;
+            await state.SaveAsync();
+            return Accepted();
         }
 
         [Topic(PubSubName, Topics.On_Product_Reserved_Failed)]
