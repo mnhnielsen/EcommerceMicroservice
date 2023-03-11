@@ -26,7 +26,5 @@ namespace sdu.bachelor.microservice.common
         public const string On_Payment_Reserved = "On_Payment_Reserved";
         public const string On_Payment_Finalized = "On_Payment_Finalized";
 
-        public const string
-
     }
 }
