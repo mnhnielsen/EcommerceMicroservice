@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\sdu.bachelor.microservice.common\sdu.bachelor.microservice.common.csproj" />
   </ItemGroup>
 
 </Project>
