@@ -17,7 +17,9 @@ namespace sdu.bachelor.microservice.basket.Controllers
         }
 
 
-        //Add To Basket (Save state in redis cache)
+
+
+        //Add Product to basket. Uses the topic On_Product_Reserved.
         [HttpPost("reserve")]
         public async Task<ActionResult> AddProductToBasket([FromServices] DaprClient daprClient, [FromBody] Reservation reservation)
         {
@@ -69,6 +71,8 @@ namespace sdu.bachelor.microservice.basket.Controllers
             return Accepted();
         }
 
+
+        // Uses the topic On_Product_Reserved_Failed for rolling back changes in local redis cache.
         [Topic(PubSubName, Topics.On_Product_Reserved_Failed)]
         [HttpPost("reservefailed")]
         public async Task<ActionResult> ReservationFailed([FromServices] DaprClient daprClient, [FromBody] ReservationEvent reservationEvent)
@@ -114,7 +118,26 @@ namespace sdu.bachelor.microservice.basket.Controllers
                 //Publish event
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Removed_From_Basket, resEvent, cancellationToken);
             }
-            return Ok(HttpStatusCode.Accepted);
+            return Accepted();
+        }
+
+        [Topic(PubSubName, Topics.On_Order_Submit)]
+        [HttpPost("ordersubmitted")]
+        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Checkout([FromServices] DaprClient daprClient, Reservation reservation)
+        {
+            var result = daprClient.GetStateAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
+
+            if (result == null)
+                return NotFound();
+
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Checkout, result);
+            return Accepted();
         }
 
         [HttpGet("{id}")]
@@ -127,6 +150,8 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
             return Ok(result);
         }
+
+
 
     }
 }
