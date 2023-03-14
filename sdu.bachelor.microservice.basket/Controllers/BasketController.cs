@@ -52,7 +52,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
             var result = await daprClient.GetStateAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
             foreach (var item in reservation.Products)
             {
-                Console.WriteLine($"Product with id {item.ProductId} for customer with id {result.CustomerId} reserved with order id of {result.OrderId}");
+                Console.WriteLine($"Product with id {item.ProductId} for customer with id {result.CustomerId}");
             }
             return Ok(reservation);
         }

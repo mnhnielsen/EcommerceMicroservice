@@ -18,10 +18,12 @@ namespace sdu.bachelor.microservice.shipping.Controllers
 
         [Topic(PubSubName, Topics.On_Payment_Reserved)]
         [HttpPost]
-        public Task<ActionResult> PrepareOrder([FromServices] DaprClient daprClient)
+        public async Task<ActionResult> PrepareOrder([FromServices] DaprClient daprClient)
         {
-            //Wait x seconds to publish On_Order_Shipped event
-            throw new NotImplementedException(nameof(PrepareOrder));
+
+            Thread.Sleep(3500);
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Shipped);
+            return Ok();
         }
     }
 }
