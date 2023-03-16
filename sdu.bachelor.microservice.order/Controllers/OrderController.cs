@@ -41,7 +41,7 @@ namespace sdu.bachelor.microservice.order.Controllers
 
         [Topic(PubSubName, Topics.On_Order_Paid)]
         [HttpPost()]
-        public Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient, Order order)
+        public Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient, OrderDto order)
         {
             throw new NotImplementedException(nameof(OrderPaidStatus));
 

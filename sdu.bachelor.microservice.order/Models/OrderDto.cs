@@ -1,6 +1,6 @@
 ﻿namespace sdu.bachelor.microservice.order.Models;
 
-public class Order
+public class OrderDto
 {
     public Guid OrderId { get; set; }
     public Guid CustomerId { get; set; }
@@ -8,5 +8,5 @@ public class Order
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
-    public List<OrderItem> Products { get; set; }
+    public List<OrderItemDto> Products { get; set; }
 }
