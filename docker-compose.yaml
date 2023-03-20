@@ -36,6 +36,8 @@ services:
     depends_on:
       "broker":
         condition: service_healthy
+      "catalog-database":
+        condition: service_started
 
   catalog-api-dapr:
     image: "daprio/daprd:1.9.4"
@@ -122,3 +124,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+
+  catalog-database:
+        image: mysql:latest
+        environment: 
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: catalogdb
+            MYSQL_USER: user
+            MYSQL_PASSWORD: 1234
+        expose: 
+          - 3306
+        volumes: 
+            - ./sdu.bachelor.microservice.catalog/Data:/docker-entrypoint-initdb.d
