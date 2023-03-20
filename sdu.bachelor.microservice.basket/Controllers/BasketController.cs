@@ -17,7 +17,11 @@ namespace sdu.bachelor.microservice.basket.Controllers
         }
 
 
-
+        [HttpGet("status")]
+        public string GetStatus()
+        {
+            return "Connected Basket-Service";
+        }
 
         //Add Product to basket. Uses the topic On_Product_Reserved.
         [HttpPost("reserve")]
@@ -52,7 +56,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
             var result = await daprClient.GetStateAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
             foreach (var item in reservation.Products)
             {
-                Console.WriteLine($"Product with id {item.ProductId} for customer with id {result.CustomerId} reserved with order id of {result.OrderId}");
+                Console.WriteLine($"Product with id {item.ProductId} for customer with id {result.CustomerId}");
             }
             return Ok(reservation);
         }

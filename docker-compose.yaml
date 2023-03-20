@@ -19,58 +19,121 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     healthcheck:
       test: [ "CMD", "nc", "-vz", "localhost", "9092" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # catalog-service:
-  #   build:
-  #     context: .
-  #     dockerfile: sdu.bachelor.microservice.catalog/Dockerfile
-  #   ports:
-  #     - "5001:80"
-  #   depends_on:
-  #     "broker":
-  #       condition: service_healthy
+  catalog-service:
+    build:
+      context: .
+      dockerfile: sdu.bachelor.microservice.catalog/Dockerfile
+    ports:
+      - "5001:80"
+    depends_on:
+      "broker":
+        condition: service_healthy
+      "catalog-database":
+        condition: service_started
 
-  # catalog-api-dapr:
-  #   image: "daprio/daprd:1.9.4"
-  #   network_mode: "service:catalog-service"
-  #   command:
-  #     [
-  #       "./daprd",
-  #       "-app-id",
-  #       "catalog-api",
-  #       "-app-port",
-  #       "5001",
-  #       "-log-level",
-  #       "debug",
-  #       "-placement-host-address",
-  #       "dapr-placement:50000",
-  #       "-components-path",
-  #       "./components"
-  #     ]
-  #   volumes:
-  #     - "./components/:/components"
-  #   depends_on:
-  #     "broker":
-  #       condition: service_healthy
-  # dapr-placement:
-  #   image: "daprio/dapr:1.9.4"
-  #   command:
-  #     [
-  #       "./placement",
-  #       "-port",
-  #       "50000",
-  #       "-log-level",
-  #       "debug"
-  #     ]
-  #   ports:
-  #     - "50000:50000"
+  catalog-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:catalog-service"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "catalog-api",
+        "-app-port",
+        "80",
+        "-log-level",
+        "debug",
+        "-placement-host-address",
+        "dapr-placement:50000",
+        "-components-path",
+        "./components"
+      ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      "broker":
+        condition: service_healthy
+
+
+  basket-service:
+    build:
+      context: .
+      dockerfile: sdu.bachelor.microservice.basket/Dockerfile
+    ports:
+      - "5002:80"
+    depends_on:
+      "broker":
+        condition: service_healthy
+      "redisBasket":
+        condition: service_healthy
+
+  basket-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:basket-service"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "basket-api",
+        "-app-port",
+        "80",
+        "-log-level",
+        "debug",
+        "-placement-host-address",
+        "dapr-placement:50000",
+        "-components-path",
+        "./components"
+      ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      "broker":
+        condition: service_healthy
+
+
+
+  
+  dapr-placement:
+    image: "daprio/dapr:1.9.4"
+    command:
+      [
+        "./placement",
+        "-port",
+        "50000",
+        "-log-level",
+        "debug"
+      ]
+    ports:
+      - "50000:50000"
+
+  redisBasket:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: [ "CMD", "nc", "-vz", "localhost", "6379" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  catalog-database:
+        image: mysql:latest
+        environment: 
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: catalogdb
+            MYSQL_USER: user
+            MYSQL_PASSWORD: 1234
+        expose: 
+          - 3306
+        volumes: 
+            - ./sdu.bachelor.microservice.catalog/Data:/docker-entrypoint-initdb.d
