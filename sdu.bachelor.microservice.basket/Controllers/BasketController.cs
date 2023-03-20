@@ -17,7 +17,11 @@ namespace sdu.bachelor.microservice.basket.Controllers
         }
 
 
-
+        [HttpGet("status")]
+        public string GetStatus()
+        {
+            return "Connected Basket-Service";
+        }
 
         //Add Product to basket. Uses the topic On_Product_Reserved.
         [HttpPost("reserve")]

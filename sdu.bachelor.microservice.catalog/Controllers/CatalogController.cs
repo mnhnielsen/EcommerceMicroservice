@@ -24,6 +24,12 @@ namespace sdu.bachelor.microservice.catalog.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        [HttpGet("status")]
+        public string GetStatus()
+        {
+            return "Connected Catalog-Service";
+        }
+
         [HttpGet]
         [TypeFilter(typeof(ProductsResultFilter))]
         public async Task<IActionResult> GetProducts()
