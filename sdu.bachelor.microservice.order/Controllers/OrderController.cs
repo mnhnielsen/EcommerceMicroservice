@@ -17,6 +17,14 @@ namespace sdu.bachelor.microservice.order.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        [HttpGet("status")]
+        public string GetStatus()
+        {
+            return "Connected Order-Service";
+        }
+
+
+
         [HttpGet("{id}")]
         public Task<ActionResult> GetOrderById(Guid id)
         {

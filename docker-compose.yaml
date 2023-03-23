@@ -99,6 +99,41 @@ services:
         condition: service_healthy
 
 
+  order-service:
+    build:
+      context: .
+      dockerfile: sdu.bachelor.microservice.order/Dockerfile
+    ports:
+      - "5003:80"
+    depends_on:
+      "broker":
+        condition: service_healthy
+
+
+  order-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:order-service"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "basket-api",
+        "-app-port",
+        "80",
+        "-log-level",
+        "debug",
+        "-placement-host-address",
+        "dapr-placement:50000",
+        "-components-path",
+        "./components"
+      ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      "broker":
+        condition: service_healthy
+
+
 
   
   dapr-placement:
@@ -142,7 +177,7 @@ services:
         image: mysql:latest
         environment: 
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: catalogdb
+            MYSQL_DATABASE: orderdb
             MYSQL_USER: user
             MYSQL_PASSWORD: 1234
         expose: 
