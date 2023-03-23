@@ -137,3 +137,15 @@ services:
           - 3306
         volumes: 
             - ./sdu.bachelor.microservice.catalog/Data:/docker-entrypoint-initdb.d
+
+  order-database:
+        image: mysql:latest
+        environment: 
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: catalogdb
+            MYSQL_USER: user
+            MYSQL_PASSWORD: 1234
+        expose: 
+          - 3306
+        volumes: 
+            - ./sdu.bachelor.microservice.order/Data:/docker-entrypoint-initdb.d

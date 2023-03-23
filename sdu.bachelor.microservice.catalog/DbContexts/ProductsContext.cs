@@ -16,6 +16,8 @@ public class ProductsContext : DbContext
         Configuration = configuration;
     }
 
+    //For prepopulate SQLlite DB
+
     //protected override void OnModelCreating(ModelBuilder modelBuilder)
     //{
     //    modelBuilder.Entity<Brand>().HasData(
