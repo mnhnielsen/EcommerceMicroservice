@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using sdu.bachelor.microservice.common;
 using sdu.bachelor.microservice.order.Models;
+using sdu.bachelor.microservice.order.Services;
 
 namespace sdu.bachelor.microservice.order.Controllers
 {
@@ -11,10 +12,12 @@ namespace sdu.bachelor.microservice.order.Controllers
     {
         public const string PubSubName = "kafka-commonpubsub";
         private readonly ILogger<OrderController> _logger;
+        private readonly IOrderRepository _orderRepository;
 
-        public OrderController(ILogger<OrderController> logger)
+        public OrderController(ILogger<OrderController> logger, IOrderRepository orderRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
         }
 
         [HttpGet("status")]
@@ -25,11 +28,32 @@ namespace sdu.bachelor.microservice.order.Controllers
 
 
 
-        [HttpGet("{id}")]
-        public Task<ActionResult> GetOrderById(Guid id)
+        [HttpGet("{id}", Name = "GetOrder")]
+        public async Task<ActionResult> GetOrderById(Guid id)
         {
-            throw new NotImplementedException(nameof(GetOrderById));
+            var order = await _orderRepository.GetOrderAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
         }
+
+        [HttpGet("{id}", Name = "GetOrder")]
+        public async Task<ActionResult> GetOrdersById(Guid id)
+        {
+            var order = await _orderRepository.GetOrderAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+        }
+
 
         [Topic(PubSubName, Topics.On_Checkout)]
         [HttpPost()]
