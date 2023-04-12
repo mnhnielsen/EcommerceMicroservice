@@ -4,26 +4,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace sdu.bachelor.microservice.order.Entities;
 
-[Table("Orders")]
 public class Order
 {
-    [Key]
-    public Guid Id { get; set; }
+    public Guid OrderId { get; set; }
 
     public Guid CustomerId { get; set; }
 
     //public DateTime OrderTime { get; set; }
     public string OrderStatus { get; set; }
-    public List<OrderItem> Items { get; set; }
+    public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 
 
-    public Order(Guid id, Guid customerid, string orderStatus)
-    {
-        Id = id;
-        CustomerId = customerid;
-        //OrderTime = DateTime.UtcNow;
-        OrderStatus = orderStatus;
-    }
+    //public Order(Guid id, Guid customerid, string orderStatus)
+    //{
+    //    OrderId = id;
+    //    CustomerId = customerid;
+    //    //OrderTime = DateTime.UtcNow;
+    //    OrderStatus = orderStatus;
+    //}
 
     public Order()
     {

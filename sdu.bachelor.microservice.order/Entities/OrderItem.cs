@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace sdu.bachelor.microservice.order.Entities;
 
-[Table("OrderItems")]
 public class OrderItem
 {
-    [Key]
     public Guid Id { get; set; }
 
     public Guid OrderId { get; set; }
@@ -17,11 +15,16 @@ public class OrderItem
 
     public OrderItem(Guid id, Guid orderId, Guid productId, double price, int quantity)
     {
-        Id= id;
-        OrderId= orderId;
-        ProductId= productId;
-        Price= price;
-        Quantity= quantity;
+        Id = id;
+        OrderId = orderId;
+        ProductId = productId;
+        Price = price;
+        Quantity = quantity;
+    }
+
+    public OrderItem()
+    {
+        
     }
 
 }

@@ -44,7 +44,7 @@ namespace sdu.bachelor.microservice.order.Controllers
                 return NotFound();
             }
 
-            return Ok(order);
+            return Ok(_mapper.Map<OrderDto>(order));
         }
 
         //[HttpGet("{id}", Name = "GetOrder")]

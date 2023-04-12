@@ -6,6 +6,7 @@ namespace sdu.bachelor.microservice.order.DbContexts;
 public class OrderContext : DbContext
 {
     public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
     protected readonly IConfiguration Configuration;
 
 
