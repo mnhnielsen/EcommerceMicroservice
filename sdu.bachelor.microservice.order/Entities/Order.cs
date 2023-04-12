@@ -12,7 +12,7 @@ public class Order
 
     public Guid CustomerId { get; set; }
 
-    public DateTime OrderTime { get; set; }
+    //public DateTime OrderTime { get; set; }
     public string OrderStatus { get; set; }
     public List<OrderItem> Items { get; set; }
 
@@ -21,7 +21,12 @@ public class Order
     {
         Id = id;
         CustomerId = customerid;
-        OrderTime = DateTime.UtcNow;
+        //OrderTime = DateTime.UtcNow;
         OrderStatus = orderStatus;
+    }
+
+    public Order()
+    {
+        
     }
 }

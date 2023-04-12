@@ -11,13 +11,11 @@ var jsonOpt = new JsonSerializerOptions()
     PropertyNameCaseInsensitive = true,
 };
 
-builder.Services.AddControllers().AddDapr(opt => opt.UseJsonSerializationOptions(jsonOpt));
-
-
+builder.Services.AddControllers().AddDapr(opt => opt.UseJsonSerializationOptions(jsonOpt)).AddNewtonsoftJson();
 
 builder.Services.AddDbContext<OrderContext>(options =>
     options.UseMySQL(
-        builder.Configuration["ConnectionStrings:SQLOrdersConnectionString"]));
+        builder.Configuration["ConnectionStrings:MYSQLConnectionString"]));
 
 
 

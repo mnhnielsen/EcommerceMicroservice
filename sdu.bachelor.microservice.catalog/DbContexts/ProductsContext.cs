@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using sdu.bachelor.microservice.catalog.Entities;
 
 namespace sdu.bachelor.microservice.catalog.DbContexts;

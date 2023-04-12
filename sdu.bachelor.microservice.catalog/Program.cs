@@ -1,13 +1,9 @@
-using Google.Api;
 using Microsoft.EntityFrameworkCore;
 using sdu.bachelor.microservice.catalog.DbContexts;
 using sdu.bachelor.microservice.catalog.Services;
-using System.Configuration;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 var jsonOpt = new JsonSerializerOptions()
 {
@@ -26,6 +22,7 @@ builder.Services.AddDbContext<ProductsContext>(options =>
 builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 

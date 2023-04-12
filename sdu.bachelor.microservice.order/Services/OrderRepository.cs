@@ -39,8 +39,15 @@ public class OrderRepository : IOrderRepository
         return await _context.Orders.Where(o => o.Id == id).ToListAsync();
     }
 
+    public async Task<bool> OrderExistsAsync(Guid id)
+    {
+        return await _context.Orders.AnyAsync(o => o.Id == id);
+    }
+
     public async Task<bool> SaveChangesAsync()
     {
         return (await _context.SaveChangesAsync() >= 0);
     }
+
+   
 }
