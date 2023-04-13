@@ -1,4 +1,5 @@
 ﻿using sdu.bachelor.microservice.order.Entities;
+using sdu.bachelor.microservice.order.Models;
 
 namespace sdu.bachelor.microservice.order.Services
 {
@@ -7,9 +8,10 @@ namespace sdu.bachelor.microservice.order.Services
         Task<Order?> GetOrderAsync(Guid id);
         Task<IEnumerable<Order>> GetOrdersAsync(Guid id);
         Task<bool> SaveChangesAsync();
-        void AddOrder(Order order);
+        Task AddOrderAsync(Order order);
         Task<bool> OrderExistsAsync(Guid id);
 
-        Task AddProductToOrder(Guid orderId, OrderItem item);
+        Task AddProductToOrderAsync(Guid orderId, OrderItem item);
+        
     }
 }

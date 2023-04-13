@@ -1,0 +1,10 @@
+{
+    "CustomerId": "33e7784d-e548-4bb5-9e1c-94a205a3d49b",
+    "OrderId": "68e7784d-e548-4bb5-9e1c-94a205a3d49b",
+    "products": [
+        {
+            "quantity": 2,
+            "productId": "ab0f5a1f-9b48-4862-8e6a-bced8d20558e"
+        }
+    ]
+}

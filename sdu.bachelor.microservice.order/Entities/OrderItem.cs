@@ -5,7 +5,8 @@ namespace sdu.bachelor.microservice.order.Entities;
 
 public class OrderItem
 {
-    public Guid Id { get; set; }
+    [Key]
+    public Guid Id { get; } = Guid.NewGuid();
 
     public Guid OrderId { get; set; }
     public Order order { get; set; }
@@ -13,9 +14,8 @@ public class OrderItem
     public double Price { get; set; }
     public int Quantity { get; set; }
 
-    public OrderItem(Guid id, Guid orderId, Guid productId, double price, int quantity)
+    public OrderItem(Guid orderId, Guid productId, double price, int quantity)
     {
-        Id = id;
         OrderId = orderId;
         ProductId = productId;
         Price = price;

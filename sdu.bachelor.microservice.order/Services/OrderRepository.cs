@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using sdu.bachelor.microservice.order.DbContexts;
 using sdu.bachelor.microservice.order.Entities;
+using sdu.bachelor.microservice.order.Models;
 
 namespace sdu.bachelor.microservice.order.Services;
 
@@ -13,26 +14,23 @@ public class OrderRepository : IOrderRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public void AddOrder(Order order)
+    public async Task AddOrderAsync(Order order)
     {
         _context.Add(order);
     }
 
-    public async Task AddProductToOrder(Guid orderId, OrderItem item)
+    public async Task AddProductToOrderAsync(Guid orderId, OrderItem item)
     {
-
-        throw new NotImplementedException();
-        //var order = await GetOrderAsync(orderId);
-
-        //if (order != null)
-        //{
-        //    order..Add(item);
-        //}
+        if (await OrderExistsAsync(orderId))
+        {
+            item.OrderId = orderId;
+            _context.OrderItems.Add(item);
+        }
     }
 
     public async Task<Order?> GetOrderAsync(Guid id)
     {
-        return await _context.Orders.Include(o=> o.Items).Where(o => o.OrderId == id).FirstOrDefaultAsync();
+        return await _context.Orders.Include(o => o.Items).Where(o => o.OrderId == id).FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<Order>> GetOrdersAsync(Guid id)
@@ -50,5 +48,5 @@ public class OrderRepository : IOrderRepository
         return (await _context.SaveChangesAsync() >= 0);
     }
 
-   
+
 }

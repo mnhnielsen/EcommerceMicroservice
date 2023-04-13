@@ -47,31 +47,30 @@ namespace sdu.bachelor.microservice.order.Controllers
             return Ok(_mapper.Map<OrderDto>(order));
         }
 
-        //[HttpGet("{id}", Name = "GetOrder")]
-        //public async Task<ActionResult> GetOrdersById(Guid id)
-        //{
-        //    var order = await _orderRepository.GetOrderAsync(id);
 
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(order);
-        //}
-
-
-        [Topic(PubSubName, Topics.On_Checkout)]
+        //[Topic(PubSubName, Topics.On_Checkout)]
         [HttpPost()]
-        public Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient)
+        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
+            var finalOrder = _mapper.Map<Entities.Order>(order);
+            await _orderRepository.AddOrderAsync(finalOrder);
+            foreach (var item in order.Products)
+            {
+                var finalItem = _mapper.Map<Entities.OrderItem>(item);
+                await _orderRepository.AddProductToOrderAsync(order.OrderId, finalItem);
+            }
+
+            return Ok(finalOrder);
 
             //Publish On_Order_Submit
+
+
+
             //Publish On_Order_Submit_Fail if errors happens
-            throw new NotImplementedException(nameof(SubmitOrder));
+            
         }
 
-        [HttpPost()]
+        [HttpPost("cancel")]
         public Task<ActionResult> CancelOrder([FromServices] DaprClient daprClient)
         {
             throw new NotImplementedException(nameof(CancelOrder));
