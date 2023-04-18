@@ -16,7 +16,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task AddOrderAsync(Order order)
     {
-        _context.Add(order);
+        await _context.Add(order);
     }
 
     public async Task AddProductToOrderAsync(Guid orderId, OrderItem item)
