@@ -14,9 +14,9 @@ public class OrderRepository : IOrderRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task AddOrderAsync(Order order)
+    public void AddOrder(Order order)
     {
-        await _context.Add(order);
+        _context.Add(order);
     }
 
     public async Task AddProductToOrderAsync(Guid orderId, OrderItem item)

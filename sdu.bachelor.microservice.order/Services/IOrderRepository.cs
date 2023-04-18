@@ -8,7 +8,7 @@ namespace sdu.bachelor.microservice.order.Services
         Task<Order?> GetOrderAsync(Guid id);
         Task<IEnumerable<Order>> GetOrdersAsync(Guid id);
         Task<bool> SaveChangesAsync();
-        Task AddOrderAsync(Order order);
+        void AddOrder(Order order);
         Task<bool> OrderExistsAsync(Guid id);
 
         Task AddProductToOrderAsync(Guid orderId, OrderItem item);

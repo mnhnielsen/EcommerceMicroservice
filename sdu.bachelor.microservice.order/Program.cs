@@ -15,7 +15,14 @@ builder.Services.AddControllers().AddDapr(opt => opt.UseJsonSerializationOptions
 
 builder.Services.AddDbContext<OrderContext>(options =>
     options.UseMySQL(
-        builder.Configuration["ConnectionStrings:MYSQLConnectionString"]));
+        builder.Configuration["ConnectionStrings:MYSQLConnectionString"],
+        mySqlOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 10,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null);
+        }));
 
 
 

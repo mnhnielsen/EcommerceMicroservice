@@ -53,12 +53,14 @@ namespace sdu.bachelor.microservice.order.Controllers
         public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
             var finalOrder = _mapper.Map<Entities.Order>(order);
-            await _orderRepository.AddOrderAsync(finalOrder);
+            _orderRepository.AddOrder(finalOrder);
             foreach (var item in order.Products)
             {
                 var finalItem = _mapper.Map<Entities.OrderItem>(item);
                 await _orderRepository.AddProductToOrderAsync(order.OrderId, finalItem);
             }
+
+            await _orderRepository.SaveChangesAsync();
 
             return Ok(finalOrder);
 
