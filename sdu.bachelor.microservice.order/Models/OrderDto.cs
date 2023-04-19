@@ -11,7 +11,7 @@ public class OrderDto
         get
         {
             var temp = 0.0;
-            foreach (var item in Items)
+            foreach (var item in Products)
             {
                 temp += item.Price * item.Quantity;
             }
@@ -19,7 +19,7 @@ public class OrderDto
         }
     }
 
-    public ICollection<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
+    public ICollection<OrderItemDto> Products { get; set; } = new List<OrderItemDto>();
 
    
 

@@ -54,15 +54,18 @@ namespace sdu.bachelor.microservice.order.Controllers
         {
             var finalOrder = _mapper.Map<Entities.Order>(order);
             _orderRepository.AddOrder(finalOrder);
-            foreach (var item in order.Products)
-            {
-                var finalItem = _mapper.Map<Entities.OrderItem>(item);
-                await _orderRepository.AddProductToOrderAsync(order.OrderId, finalItem);
-            }
-
             await _orderRepository.SaveChangesAsync();
+            Console.WriteLine($"Found {order.Products.Count} items in order with ID of {order.OrderId}");
+            //foreach (var item in order.Products)
+            //{
+            //    Console.WriteLine(item.ProductId);
+            //    var finalItem = _mapper.Map<Entities.OrderItem>(item);
+            //    await _orderRepository.AddProductToOrderAsync(order.OrderId, finalItem);
+            //}
+            //await _orderRepository.SaveChangesAsync();
 
-            return Ok(finalOrder);
+
+            return Ok(order);
 
             //Publish On_Order_Submit
 

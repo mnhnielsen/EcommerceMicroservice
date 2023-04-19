@@ -26,11 +26,16 @@ public class OrderRepository : IOrderRepository
             item.OrderId = orderId;
             _context.OrderItems.Add(item);
         }
+        else
+        {
+            Console.WriteLine("Order does not exits");
+        }
     }
 
     public async Task<Order?> GetOrderAsync(Guid id)
     {
-        return await _context.Orders.Include(o => o.Items).Where(o => o.OrderId == id).FirstOrDefaultAsync();
+        //return await _context.Orders.Where(o => o.OrderId == id).FirstOrDefaultAsync();
+        return await _context.Orders.Include(o => o.Products).Where(o => o.OrderId == id).FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<Order>> GetOrdersAsync(Guid id)

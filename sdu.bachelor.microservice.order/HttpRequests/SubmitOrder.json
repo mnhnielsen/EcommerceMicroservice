@@ -1,10 +1,13 @@
 {
     "CustomerId": "33e7784d-e548-4bb5-9e1c-94a205a3d49b",
     "OrderId": "68e7784d-e548-4bb5-9e1c-94a205a3d49b",
-    "products": [
+    "Products": [
         {
-            "quantity": 2,
-            "productId": "ab0f5a1f-9b48-4862-8e6a-bced8d20558e"
+            "OrderId": "68e7784d-e548-4bb5-9e1c-94a205a3d49b",
+            "Quantity": 1,
+            "Price": 10000.0,
+            "ProductId": "7201fd50-25b9-4b7d-99a7-b367b73222f8"
         }
     ]
+
 }

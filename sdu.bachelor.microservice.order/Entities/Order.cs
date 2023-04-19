@@ -11,8 +11,8 @@ public class Order
     public Guid CustomerId { get; set; }
 
     //public DateTime OrderTime { get; set; }
-    public string OrderStatus { get; set; }
-    public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
+    public string OrderStatus { get; set; } = "Reserved";
+    public ICollection<OrderItem> Products { get; set; } = new List<OrderItem>();
 
 
     //public Order(Guid id, Guid customerid, string orderStatus)
