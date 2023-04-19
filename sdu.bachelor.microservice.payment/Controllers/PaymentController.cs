@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using sdu.bachelor.microservice.common;
+using sdu.bachelor.microservice.payment.Models;
 
 namespace sdu.bachelor.microservice.payment.Controllers
 {
@@ -16,6 +17,13 @@ namespace sdu.bachelor.microservice.payment.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        [HttpGet("status")]
+        public string GetStatus()
+        {
+            return "Connected Payment-Service";
+        }
+
+
         [HttpGet("{id}")]
         public Task<ActionResult> GetPaymentById(Guid id)
         {
@@ -24,18 +32,22 @@ namespace sdu.bachelor.microservice.payment.Controllers
 
         [Topic(PubSubName, Topics.On_Order_Submit)]
         [HttpPost("reserve")]
-        public Task<ActionResult> ReservePayment([FromServices] DaprClient daprClient)
+        public async Task<IActionResult> ReservePayment([FromServices] DaprClient daprClient,[FromBody] OrderPaymentInfoDto orderPaymentInfoDto)
         {
 
             //Publis On_Payment_Reserved or On_Payment_Reserved_Failed
-            throw new NotImplementedException(nameof(ReservePayment));
+            Console.WriteLine($"Recieved an order with an ORDERID of {orderPaymentInfoDto.OrderId}, from customer with ID: {orderPaymentInfoDto.CustomerID}");
+            Console.WriteLine($"Updating the OrderStatus of OrderID {orderPaymentInfoDto.OrderId}");
+            var result = new OrderPaymentInfoDto { CustomerID = orderPaymentInfoDto.CustomerID, OrderId=orderPaymentInfoDto.OrderId, OrderStatus = "Reserved" };
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Payment_Reserved, result);
+            return Ok(orderPaymentInfoDto);
+
         }
 
         [Topic(PubSubName, Topics.On_Order_Shipped)]
-        [HttpPost()]
-        public Task<ActionResult> FinalizePayment([FromServices] DaprClient daprClient)
+        [HttpPost("finalize")]
+        public Task<ActionResult> FinalizePayment([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfoDto)
         {
-            //Check in Payment db for the reserved payment
             //Take funds
             //Publish On_Payment_Finalized
             throw new NotImplementedException(nameof(FinalizePayment));
