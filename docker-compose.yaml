@@ -132,6 +132,41 @@ services:
         condition: service_healthy
 
 
+  payment-service:
+      build:
+        context: .
+        dockerfile: sdu.bachelor.microservice.payment/Dockerfile
+      ports:
+        - "5004:80"
+      depends_on:
+        "broker":
+          condition: service_healthy
+
+
+  payment-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:payment-service"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "basket-api",
+        "-app-port",
+        "80",
+        "-log-level",
+        "debug",
+        "-placement-host-address",
+        "dapr-placement:50000",
+        "-components-path",
+        "./components"
+      ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      "broker":
+        condition: service_healthy
+
+
 
   
   dapr-placement:

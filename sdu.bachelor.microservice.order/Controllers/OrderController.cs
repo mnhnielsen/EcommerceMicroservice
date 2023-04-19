@@ -52,27 +52,24 @@ namespace sdu.bachelor.microservice.order.Controllers
         [HttpPost()]
         public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
-            var finalOrder = _mapper.Map<Entities.Order>(order);
-            _orderRepository.AddOrder(finalOrder);
-            await _orderRepository.SaveChangesAsync();
             Console.WriteLine($"Found {order.Products.Count} items in order with ID of {order.OrderId}");
-            //foreach (var item in order.Products)
-            //{
-            //    Console.WriteLine(item.ProductId);
-            //    var finalItem = _mapper.Map<Entities.OrderItem>(item);
-            //    await _orderRepository.AddProductToOrderAsync(order.OrderId, finalItem);
-            //}
-            //await _orderRepository.SaveChangesAsync();
+            var finalOrder = _mapper.Map<Entities.Order>(order);
+            try
+            {
+                _orderRepository.AddOrder(finalOrder);
+                await _orderRepository.SaveChangesAsync();
+                //Publish On_Order_Submit
+                var result = new OrderPaymentDto { CustomerID = order.CustomerId, OrderId = order.OrderId, OrderStatus = "Pending" };
+                await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
 
+            }
+            catch (Exception ex)
+            {
+                //Publish On_Order_Submit_Fail if errors happens
+
+            }
 
             return Ok(order);
-
-            //Publish On_Order_Submit
-
-
-
-            //Publish On_Order_Submit_Fail if errors happens
-            
         }
 
         [HttpPost("cancel")]

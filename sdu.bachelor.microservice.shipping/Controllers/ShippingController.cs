@@ -16,13 +16,19 @@ namespace sdu.bachelor.microservice.shipping.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        [HttpGet("status")]
+        public string GetStatus()
+        {
+            return "Connected Shipping-Service";
+        }
+
         [Topic(PubSubName, Topics.On_Payment_Reserved)]
         [HttpPost]
-        public async Task<ActionResult> PrepareOrder([FromServices] DaprClient daprClient)
+        public async Task<ActionResult> PrepareOrder([FromServices] DaprClient daprClient, [FromBody] OrderStatusDto orderStatus)
         {
-
+            Console.WriteLine($"Shipping: Recieved an order with status of: {orderStatus.OrderStatus} from order {orderStatus.OrderId}");
             Thread.Sleep(3500);
-            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Shipped);
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Shipped, new OrderStatusDto {OrderId=orderStatus.OrderId, CustomerID = orderStatus.CustomerID, OrderStatus = "Paid" });
             return Ok();
         }
     }
