@@ -10,6 +10,7 @@ namespace sdu.bachelor.microservice.order.Services
         Task<bool> SaveChangesAsync();
         void AddOrder(Order order);
         Task<bool> OrderExistsAsync(Guid id);
+        void DeleteOrder(Order order);
 
         Task AddProductToOrderAsync(Guid orderId, OrderItem item);
         

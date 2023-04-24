@@ -32,6 +32,11 @@ public class OrderRepository : IOrderRepository
         }
     }
 
+    public void DeleteOrder(Order order)
+    {
+        _context.Orders.Remove(order);
+    }
+
     public async Task<Order?> GetOrderAsync(Guid id)
     {
         //return await _context.Orders.Where(o => o.OrderId == id).FirstOrDefaultAsync();
