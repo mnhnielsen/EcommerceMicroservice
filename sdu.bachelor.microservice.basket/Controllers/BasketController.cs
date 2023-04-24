@@ -1,5 +1,6 @@
 ﻿using sdu.bachelor.microservice.basket.Entities;
 using System.Net;
+using System.Threading;
 
 namespace sdu.bachelor.microservice.basket.Controllers
 {
@@ -125,12 +126,15 @@ namespace sdu.bachelor.microservice.basket.Controllers
             return Accepted();
         }
 
-        //[Topic(PubSubName, Topics.On_Order_Submit)]
-        //[HttpPost("ordersubmitted")]
-        //public Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [Topic(PubSubName, Topics.On_Order_Submit)]
+        [HttpPost("ordersubmitted")]
+        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfo)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken cancellationToken = source.Token;
+            await daprClient.DeleteStateAsync(BasketStoreName, orderPaymentInfo.CustomerId.ToString(), cancellationToken: cancellationToken);
+            return Ok();
+        }
 
         [HttpPost]
         public async Task<ActionResult> Checkout([FromServices] DaprClient daprClient, Reservation reservation)
