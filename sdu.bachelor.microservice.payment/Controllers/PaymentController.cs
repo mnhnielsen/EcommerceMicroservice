@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using sdu.bachelor.microservice.common;
 using sdu.bachelor.microservice.payment.Models;
+using Microsoft.AspNetCore.JsonPatch;
+using System.Xml.XPath;
+
 
 namespace sdu.bachelor.microservice.payment.Controllers
 {
@@ -44,13 +47,15 @@ namespace sdu.bachelor.microservice.payment.Controllers
 
         }
 
-        [Topic(PubSubName, Topics.On_Order_Shipped)]
+        //[Topic(PubSubName, Topics.On_Order_Shipped)]
         [HttpPost("finalize")]
-        public Task<ActionResult> FinalizePayment([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfoDto)
+        public async Task<ActionResult> FinalizePayment([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfoDto)
         {
             //Take funds
-            //Publish On_Payment_Finalized
-            throw new NotImplementedException(nameof(FinalizePayment));
+            //Publish On_Order_Paid
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Paid, orderPaymentInfoDto);
+            //throw new NotImplementedException(nameof(FinalizePayment));
+            return NoContent();
         }
 
 

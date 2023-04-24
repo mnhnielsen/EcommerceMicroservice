@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using sdu.bachelor.microservice.common;
 using sdu.bachelor.microservice.order.Models;
 using sdu.bachelor.microservice.order.Services;
@@ -49,60 +50,51 @@ namespace sdu.bachelor.microservice.order.Controllers
 
 
         //[Topic(PubSubName, Topics.On_Checkout)]
-        [HttpPost()]
+        [HttpPost("submitorder")]
         public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
             Console.WriteLine($"Found {order.Products.Count} items in order with ID of {order.OrderId}");
             var finalOrder = _mapper.Map<Entities.Order>(order);
-            try
-            {
-                _orderRepository.AddOrder(finalOrder);
-                await _orderRepository.SaveChangesAsync();
-                //Publish On_Order_Submit
-                var result = new OrderPaymentDto { CustomerID = order.CustomerId, OrderId = order.OrderId, OrderStatus = "Pending" };
-                await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
 
-            }
-            catch (Exception ex)
-            {
-                //Publish On_Order_Submit_Fail if errors happens
-
-            }
-
+            _orderRepository.AddOrder(finalOrder);
+            await _orderRepository.SaveChangesAsync();
+            //Publish On_Order_Submit
+            var result = new OrderPaymentDto { CustomerID = order.CustomerId, OrderId = order.OrderId, OrderStatus = "Reserved" };
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
             return Ok(order);
         }
 
-        [HttpPost("cancel")]
-        public Task<ActionResult> CancelOrder([FromServices] DaprClient daprClient)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> CancelOrder([FromServices] DaprClient daprClient, Guid id)
         {
-            throw new NotImplementedException(nameof(CancelOrder));
-        }
-
-        //[Topic(PubSubName, Topics.On_Order_Paid)]
-        [HttpPatch("{id}")]
-        public async Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient, Guid id, JsonPatchDocument<OrderToUpdateDto> patchDocument)
-        {
-
-            var order = await _orderRepository.GetOrderAsync(id);
-            if (!await _orderRepository.OrderExistsAsync(id))
+            var result = await _orderRepository.GetOrderAsync(id);
+            if (!await _orderRepository.OrderExistsAsync(result.OrderId))
+            {
+                Console.WriteLine("Order Not Found");
                 return NotFound();
-
-
-            var orderToPatch = _mapper.Map<OrderToUpdateDto>(order);
-
-            patchDocument.ApplyTo(orderToPatch, ModelState);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (!TryValidateModel(orderToPatch))
-                return BadRequest(ModelState);
-
-
-            _mapper.Map(orderToPatch, order);
-            await _orderRepository.SaveChangesAsync();
+            }
+            var orderToDelete = _mapper.Map<Entities.Order>(result);
+            _orderRepository.DeleteOrder(orderToDelete);
+            _orderRepository.SaveChangesAsync();
+            
 
             return NoContent();
+        }
+
+        [Topic(PubSubName, Topics.On_Order_Paid)]
+        [HttpPost("finalize")]
+        public async Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient, OrderPaymentDto order)
+        {
+
+            var result = await _orderRepository.GetOrderAsync(order.OrderId);
+            if (!await _orderRepository.OrderExistsAsync(result.OrderId))
+            {
+                Console.WriteLine("Order Not Found");
+                return NotFound();
+            }
+            result.OrderStatus = "Paid";
+            await _orderRepository.SaveChangesAsync();
+            return Ok(result);
         }
 
 
