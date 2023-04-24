@@ -125,12 +125,12 @@ namespace sdu.bachelor.microservice.basket.Controllers
             return Accepted();
         }
 
-        [Topic(PubSubName, Topics.On_Order_Submit)]
-        [HttpPost("ordersubmitted")]
-        public Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient)
-        {
-            throw new NotImplementedException();
-        }
+        //[Topic(PubSubName, Topics.On_Order_Submit)]
+        //[HttpPost("ordersubmitted")]
+        //public Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         [HttpPost]
         public async Task<ActionResult> Checkout([FromServices] DaprClient daprClient, Reservation reservation)

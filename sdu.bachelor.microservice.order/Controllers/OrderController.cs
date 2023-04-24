@@ -49,7 +49,7 @@ namespace sdu.bachelor.microservice.order.Controllers
 
 
         //[Topic(PubSubName, Topics.On_Checkout)]
-        [HttpPost()]
+        [HttpPost("submitorder")]
         public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
             Console.WriteLine($"Found {order.Products.Count} items in order with ID of {order.OrderId}");
@@ -59,7 +59,7 @@ namespace sdu.bachelor.microservice.order.Controllers
                 _orderRepository.AddOrder(finalOrder);
                 await _orderRepository.SaveChangesAsync();
                 //Publish On_Order_Submit
-                var result = new OrderPaymentDto { CustomerID = order.CustomerId, OrderId = order.OrderId, OrderStatus = "Pending" };
+                var result = new OrderPaymentDto { CustomerID = order.CustomerId, OrderId = order.OrderId, OrderStatus = "Reserved" };
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
 
             }
@@ -78,29 +78,33 @@ namespace sdu.bachelor.microservice.order.Controllers
             throw new NotImplementedException(nameof(CancelOrder));
         }
 
-        //[Topic(PubSubName, Topics.On_Order_Paid)]
-        [HttpPatch("{id}")]
-        public async Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient, Guid id, JsonPatchDocument<OrderToUpdateDto> patchDocument)
+        [Topic(PubSubName, Topics.On_Order_Paid)]
+        [HttpPost("finalize")]
+        public async Task<ActionResult> OrderPaidStatus([FromServices] DaprClient daprClient, OrderPaymentDto order)
         {
 
-            var order = await _orderRepository.GetOrderAsync(id);
-            if (!await _orderRepository.OrderExistsAsync(id))
+            var result = await _orderRepository.GetOrderAsync(order.OrderId);
+            Console.WriteLine($"GOT ORDER TO UPDATE: { result.OrderId}");
+            if (!await _orderRepository.OrderExistsAsync(result.OrderId))
+            {
+                Console.WriteLine("Order Not Found");
                 return NotFound();
-
-
-            var orderToPatch = _mapper.Map<OrderToUpdateDto>(order);
-
-            patchDocument.ApplyTo(orderToPatch, ModelState);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (!TryValidateModel(orderToPatch))
-                return BadRequest(ModelState);
-
-
-            _mapper.Map(orderToPatch, order);
+            }
+            result.OrderStatus = "Paid";
             await _orderRepository.SaveChangesAsync();
+            //var orderToPatch = _mapper.Map<OrderToUpdateDto>(order);
+
+            //patchDocument.ApplyTo(orderToPatch, ModelState);
+
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
+
+            //if (!TryValidateModel(orderToPatch))
+            //    return BadRequest(ModelState);
+
+
+            //_mapper.Map(orderToPatch, order);
+            //await _orderRepository.SaveChangesAsync();
 
             return NoContent();
         }

@@ -115,7 +115,7 @@ services:
       [
         "./daprd",
         "-app-id",
-        "basket-api",
+        "order-api",
         "-app-port",
         "80",
         "-log-level",
@@ -150,7 +150,7 @@ services:
       [
         "./daprd",
         "-app-id",
-        "basket-api",
+        "payment-api",
         "-app-port",
         "80",
         "-log-level",
