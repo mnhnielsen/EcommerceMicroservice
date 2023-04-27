@@ -6,12 +6,12 @@ namespace sdu.bachelor.microservice.order.Entities;
 
 public class Order
 {
-    public Guid OrderId { get; set; }
+    public Guid OrderId { get; set; } = Guid.NewGuid();
 
     public Guid CustomerId { get; set; }
 
     //public DateTime OrderTime { get; set; }
-    public string OrderStatus { get; set; } = "Reserved";
+    public string OrderStatus { get; set; } = "Pending";
     public ICollection<OrderItem> Products { get; set; } = new List<OrderItem>();
 
 
