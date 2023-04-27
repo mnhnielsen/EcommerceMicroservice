@@ -1,5 +1,6 @@
 ﻿using sdu.bachelor.microservice.basket.Entities;
 using System.Net;
+using System.Text.Json;
 using System.Threading;
 
 namespace sdu.bachelor.microservice.basket.Controllers
@@ -136,15 +137,15 @@ namespace sdu.bachelor.microservice.basket.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Checkout([FromServices] DaprClient daprClient, Reservation reservation)
+        [HttpPost("{id}")]
+        public async Task<ActionResult> Checkout([FromServices] DaprClient daprClient, Guid id)
         {
-            var result = daprClient.GetStateAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
+            var result = daprClient.GetStateAsync<Reservation>(BasketStoreName, id.ToString());
 
             if (result == null)
                 return NotFound();
-
-            await daprClient.PublishEventAsync(PubSubName, Topics.On_Checkout, result);
+            //Console.WriteLine(JsonSerializer.Serialize(result.Result));
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Checkout, result.Result);
             return Accepted();
         }
 

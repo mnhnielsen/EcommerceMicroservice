@@ -49,19 +49,45 @@ namespace sdu.bachelor.microservice.order.Controllers
         }
 
 
-        //[Topic(PubSubName, Topics.On_Checkout)]
-        [HttpPost("submitorder")]
-        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
+        [Topic(PubSubName, Topics.On_Checkout)]
+        [HttpPost("initorder")]
+        public async Task<ActionResult> InitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
-            Console.WriteLine($"Found {order.Products.Count} items in order with ID of {order.OrderId}");
+            Console.WriteLine($"Found {order.Products.Count} items in customer with ID of {order.CustomerId}");
+            
             var finalOrder = _mapper.Map<Entities.Order>(order);
-
+            Console.WriteLine($"Made new orderid {finalOrder.OrderId}");
+            foreach (var item in finalOrder.Products)
+            {
+                item.OrderId = finalOrder.OrderId;
+            }
             _orderRepository.AddOrder(finalOrder);
+            
+            await _orderRepository.SaveChangesAsync();
+            //var result = new OrderPaymentDto { CustomerID = finalOrder.CustomerId, OrderId = finalOrder.OrderId, OrderStatus = "Pending" };
+            //await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
+            return Ok(order);
+        }
+
+
+        [HttpPost("{id}")]
+        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, Guid id)
+        {
+            //Get Order
+            var orderToPurchase = await _orderRepository.GetOrderAsync(id);
+            if (orderToPurchase == null)
+                return NotFound();
+            var finalOrder = _mapper.Map<Entities.Order>(orderToPurchase);
+            //foreach (var item in finalOrder.Products)
+            //{
+            //    item.OrderId = id;
+            //}
+            //finalOrder.OrderStatus = "Reserved";
             await _orderRepository.SaveChangesAsync();
             //Publish On_Order_Submit
-            var result = new OrderPaymentDto { CustomerID = order.CustomerId, OrderId = order.OrderId, OrderStatus = "Reserved" };
-            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
-            return Ok(order);
+            var result = new OrderPaymentDto { CustomerID = orderToPurchase.CustomerId, OrderId = orderToPurchase.OrderId, OrderStatus = orderToPurchase.OrderStatus };
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, orderToPurchase);
+            return Ok(orderToPurchase);
         }
 
         [HttpDelete("{id}")]
@@ -75,8 +101,8 @@ namespace sdu.bachelor.microservice.order.Controllers
             }
             var orderToDelete = _mapper.Map<Entities.Order>(result);
             _orderRepository.DeleteOrder(orderToDelete);
-            _orderRepository.SaveChangesAsync();
-            
+            await _orderRepository.SaveChangesAsync();
+
 
             return NoContent();
         }
