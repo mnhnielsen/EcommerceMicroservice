@@ -47,7 +47,7 @@ namespace sdu.bachelor.microservice.payment.Controllers
 
         }
 
-        //[Topic(PubSubName, Topics.On_Order_Shipped)]
+        [Topic(PubSubName, Topics.On_Order_Shipped)]
         [HttpPost("finalize")]
         public async Task<ActionResult> FinalizePayment([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfoDto)
         {

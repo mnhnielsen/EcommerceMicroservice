@@ -217,3 +217,7 @@ services:
           - 3306
         volumes: 
             - ./sdu.bachelor.microservice.order/Data:/docker-entrypoint-initdb.d
+  zipkin:
+      image: openzipkin/zipkin
+      ports:
+      - "9411:9411"
