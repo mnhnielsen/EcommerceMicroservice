@@ -27,8 +27,11 @@ namespace sdu.bachelor.microservice.shipping.Controllers
         public async Task<ActionResult> PrepareOrder([FromServices] DaprClient daprClient, [FromBody] OrderStatusDto orderStatus)
         {
             Console.WriteLine($"Shipping: Recieved an order with status of: {orderStatus.OrderStatus} from order {orderStatus.OrderId}");
-            Thread.Sleep(3500);
-            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Shipped, new OrderStatusDto {OrderId=orderStatus.OrderId, CustomerID = orderStatus.CustomerID, OrderStatus = "Paid" });
+            Console.WriteLine($"Shipping: Shipping ID Placed: {Guid.NewGuid()}");
+
+            var result = new OrderStatusDto { OrderId = orderStatus.OrderId, CustomerID = orderStatus.CustomerID, OrderStatus = "Shipped" };
+
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Shipped, result);
             return Ok();
         }
     }

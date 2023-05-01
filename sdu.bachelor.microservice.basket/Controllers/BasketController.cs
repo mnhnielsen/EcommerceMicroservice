@@ -32,14 +32,14 @@ namespace sdu.bachelor.microservice.basket.Controllers
             var state = await daprClient.GetStateEntryAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
 
             if (state.Value is not null)
-            { 
+            {
 
                 state.Value = reservation;
                 await state.SaveAsync();
             }
 
 
-            
+
             //Save in redis cache
             await daprClient.SaveStateAsync(BasketStoreName, reservation.CustomerId.ToString(), reservation);
             Console.WriteLine("Reservation Saved to Cache");
@@ -129,7 +129,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
         [Topic(PubSubName, Topics.On_Order_Submit)]
         [HttpPost("ordersubmitted")]
-        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfo)
+        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, [FromBody] OrderPaymentInfoDto orderPaymentInfo)
         {
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken cancellationToken = source.Token;

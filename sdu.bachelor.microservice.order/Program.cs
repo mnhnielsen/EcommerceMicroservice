@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 var jsonOpt = new JsonSerializerOptions()
 {
     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-    PropertyNameCaseInsensitive = true,
+    PropertyNameCaseInsensitive = true
 };
 
 builder.Services.AddControllers().AddDapr(opt => opt.UseJsonSerializationOptions(jsonOpt)).AddNewtonsoftJson();

@@ -26,13 +26,6 @@ namespace sdu.bachelor.microservice.payment.Controllers
             return "Connected Payment-Service";
         }
 
-
-        [HttpGet("{id}")]
-        public Task<ActionResult> GetPaymentById(Guid id)
-        {
-            throw new NotImplementedException(nameof(GetPaymentById));
-        }
-
         [Topic(PubSubName, Topics.On_Order_Submit)]
         [HttpPost("reserve")]
         public async Task<IActionResult> ReservePayment([FromServices] DaprClient daprClient,[FromBody] OrderPaymentInfoDto orderPaymentInfoDto)
@@ -40,10 +33,8 @@ namespace sdu.bachelor.microservice.payment.Controllers
 
             //Publis On_Payment_Reserved or On_Payment_Reserved_Failed
             Console.WriteLine($"Recieved an order with an ORDERID of {orderPaymentInfoDto.OrderId}, from customer with ID: {orderPaymentInfoDto.CustomerID}");
-            Console.WriteLine($"Updating the OrderStatus of OrderID {orderPaymentInfoDto.OrderId}");
-            var result = new OrderPaymentInfoDto { CustomerID = orderPaymentInfoDto.CustomerID, OrderId=orderPaymentInfoDto.OrderId, OrderStatus = "Reserved" };
-            await daprClient.PublishEventAsync(PubSubName, Topics.On_Payment_Reserved, result);
-            return Ok(orderPaymentInfoDto);
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Payment_Reserved, orderPaymentInfoDto);
+            return Ok();
 
         }
 
