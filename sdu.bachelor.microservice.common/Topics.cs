@@ -20,6 +20,7 @@ namespace sdu.bachelor.microservice.common
         public const string On_Product_Reserved = "On_Product_Reserved";
         public const string On_Product_Removed_From_Basket = "On_Product_Removed_From_Basket";
 
+        public const string On_Payment_Reserved_Failed = "On_Payment_Reserved_Failed";
         public const string On_Payment_Reserved = "On_Payment_Reserved";
 
     }

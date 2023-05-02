@@ -129,7 +129,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
         [Topic(PubSubName, Topics.On_Order_Submit)]
         [HttpPost("ordersubmitted")]
-        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, [FromBody] OrderPaymentInfoDto orderPaymentInfo)
+        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, [FromBody] OrderPaymentDto orderPaymentInfo)
         {
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken cancellationToken = source.Token;

@@ -6,6 +6,7 @@ using MySqlX.XDevAPI.Common;
 using sdu.bachelor.microservice.common;
 using sdu.bachelor.microservice.order.Models;
 using sdu.bachelor.microservice.order.Services;
+using System.Text.Json;
 
 namespace sdu.bachelor.microservice.order.Controllers
 {
@@ -77,7 +78,8 @@ namespace sdu.bachelor.microservice.order.Controllers
             finalOrder.OrderStatus = "Reserved";
             await _orderRepository.SaveChangesAsync();
 
-            var result = new OrderPaymentDto { CustomerID = finalOrder.CustomerId, OrderId = finalOrder.OrderId, OrderStatus = finalOrder.OrderStatus };
+            var result = new OrderPaymentDto(finalOrder.CustomerId, finalOrder.OrderId, finalOrder.OrderStatus);
+            Console.WriteLine(result);
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
 
             return Ok();
@@ -116,6 +118,30 @@ namespace sdu.bachelor.microservice.order.Controllers
             finalOrder.OrderStatus = order.OrderStatus;
             await _orderRepository.SaveChangesAsync();
             return Ok();
+        }
+
+        [Topic(PubSubName, Topics.On_Payment_Reserved_Failed)]
+        [HttpPost("paymentfailed")]
+        public async Task<ActionResult> PaymentFailed([FromServices] DaprClient daprClient, [FromBody] OrderPaymentDto order)
+        {
+            var result = await _orderRepository.GetOrderAsync(order.OrderId);
+            if (!await _orderRepository.OrderExistsAsync(result.OrderId))
+            {
+                Console.WriteLine("Order Not Found");
+                return NotFound();
+            }
+            var orderToUpdate = _mapper.Map<Entities.Order>(result);
+            orderToUpdate.OrderStatus = "Cancelled";
+            await _orderRepository.SaveChangesAsync();
+
+            foreach (var item in result.Products)
+            {
+                var orderToCancel = new OrderCancellationDto { CustomerId = result.CustomerId, ProductId = item.ProductId, Quantity = item.Quantity };
+                await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Cancel, orderToCancel);
+            }
+
+
+            return NoContent();
         }
 
 

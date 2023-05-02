@@ -1,6 +1,6 @@
-﻿namespace sdu.bachelor.microservice.payment.Models;
+﻿namespace sdu.bachelor.microservice.shipping.Models;
 
-public class OrderPaymentInfoDto
+public class OrderPaymentDto
 {
     public Guid CustomerID { get; set; }
     public Guid OrderId { get; set; }
