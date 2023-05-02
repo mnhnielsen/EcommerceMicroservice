@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using sdu.bachelor.microservice.common;
+using sdu.bachelor.microservice.order.Entities;
 using sdu.bachelor.microservice.order.Models;
 using sdu.bachelor.microservice.order.Services;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace sdu.bachelor.microservice.order.Controllers
 {
@@ -71,12 +73,17 @@ namespace sdu.bachelor.microservice.order.Controllers
 
 
         [HttpPost("{id}")]
-        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, Guid id)
+        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, Guid id, [FromBody] CustomerDto customer)
         {
 
             var order = await _orderRepository.GetOrderAsync(id);
             var finalOrder = _mapper.Map<Entities.Order>(order);
+
             finalOrder.OrderStatus = "Reserved";
+
+            var customerToSave = new Customer { CustomerId = finalOrder.CustomerId, Name = customer.Name, Mail = customer.Mail, Address=customer.Address};
+
+            _orderRepository.AddCustomer(customerToSave);
             await _orderRepository.SaveChangesAsync();
 
             var result = new OrderPaymentDto(finalOrder.CustomerId, finalOrder.OrderId, finalOrder.OrderStatus);
