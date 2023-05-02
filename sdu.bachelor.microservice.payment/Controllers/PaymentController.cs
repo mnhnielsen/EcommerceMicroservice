@@ -4,6 +4,7 @@ using sdu.bachelor.microservice.common;
 using sdu.bachelor.microservice.payment.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Xml.XPath;
+using System;
 
 
 namespace sdu.bachelor.microservice.payment.Controllers
@@ -26,36 +27,38 @@ namespace sdu.bachelor.microservice.payment.Controllers
             return "Connected Payment-Service";
         }
 
-
-        [HttpGet("{id}")]
-        public Task<ActionResult> GetPaymentById(Guid id)
-        {
-            throw new NotImplementedException(nameof(GetPaymentById));
-        }
-
         [Topic(PubSubName, Topics.On_Order_Submit)]
         [HttpPost("reserve")]
-        public async Task<IActionResult> ReservePayment([FromServices] DaprClient daprClient,[FromBody] OrderPaymentInfoDto orderPaymentInfoDto)
+        public async Task<IActionResult> ReservePayment([FromServices] DaprClient daprClient, [FromBody] OrderPaymentDto orderPaymentInfoDto)
         {
 
             //Publis On_Payment_Reserved or On_Payment_Reserved_Failed
             Console.WriteLine($"Recieved an order with an ORDERID of {orderPaymentInfoDto.OrderId}, from customer with ID: {orderPaymentInfoDto.CustomerID}");
-            Console.WriteLine($"Updating the OrderStatus of OrderID {orderPaymentInfoDto.OrderId}");
-            var result = new OrderPaymentInfoDto { CustomerID = orderPaymentInfoDto.CustomerID, OrderId=orderPaymentInfoDto.OrderId, OrderStatus = "Reserved" };
-            await daprClient.PublishEventAsync(PubSubName, Topics.On_Payment_Reserved, result);
-            return Ok(orderPaymentInfoDto);
+
+            var randomEvent = new Random().Next(0, 2);
+            if (randomEvent == 0)
+            {
+                Console.WriteLine($"RANDOM EVENT ({randomEvent}), Payment Reserved Successfully");
+                await daprClient.PublishEventAsync(PubSubName, Topics.On_Payment_Reserved, orderPaymentInfoDto);
+                return Ok();
+            }
+            Console.WriteLine($"RANDOM EVENT ({randomEvent}), Payment Reserved Failed");
+
+            await daprClient.PublishEventAsync(PubSubName, Topics.On_Payment_Reserved_Failed, orderPaymentInfoDto);
+            
+            return Ok();
 
         }
 
-        //[Topic(PubSubName, Topics.On_Order_Shipped)]
+        [Topic(PubSubName, Topics.On_Order_Shipped)]
         [HttpPost("finalize")]
-        public async Task<ActionResult> FinalizePayment([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfoDto)
+        public async Task<ActionResult> FinalizePayment([FromServices] DaprClient daprClient, OrderPaymentDto orderPaymentInfoDto)
         {
             //Take funds
             //Publish On_Order_Paid
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Paid, orderPaymentInfoDto);
             //throw new NotImplementedException(nameof(FinalizePayment));
-            return NoContent();
+            return Ok();
         }
 
 

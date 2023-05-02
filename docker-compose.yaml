@@ -60,7 +60,6 @@ services:
       "broker":
         condition: service_healthy
 
-
   basket-service:
     build:
       context: .
@@ -96,7 +95,6 @@ services:
       "broker":
         condition: service_healthy
 
-
   order-service:
     build:
       context: .
@@ -106,7 +104,6 @@ services:
     depends_on:
       "broker":
         condition: service_healthy
-
 
   order-api-dapr:
     image: "daprio/daprd:1.9.4"
@@ -131,17 +128,15 @@ services:
       "broker":
         condition: service_healthy
 
-
   payment-service:
-      build:
-        context: .
-        dockerfile: sdu.bachelor.microservice.payment/Dockerfile
-      ports:
-        - "5004:80"
-      depends_on:
-        "broker":
-          condition: service_healthy
-
+    build:
+      context: .
+      dockerfile: sdu.bachelor.microservice.payment/Dockerfile
+    ports:
+      - "5004:80"
+    depends_on:
+      "broker":
+        condition: service_healthy
 
   payment-api-dapr:
     image: "daprio/daprd:1.9.4"
@@ -166,9 +161,39 @@ services:
       "broker":
         condition: service_healthy
 
+  shipping-service:
+    build:
+      context: .
+      dockerfile: sdu.bachelor.microservice.shipping/Dockerfile
+    ports:
+      - "5005:80"
+    depends_on:
+      "broker":
+        condition: service_healthy
 
+  shipping-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:shipping-service"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "shipping-api",
+        "-app-port",
+        "80",
+        "-log-level",
+        "debug",
+        "-placement-host-address",
+        "dapr-placement:50000",
+        "-components-path",
+        "./components"
+      ]
+    volumes:
+      - "./components/:/components"
+    depends_on:
+      "broker":
+        condition: service_healthy
 
-  
   dapr-placement:
     image: "daprio/dapr:1.9.4"
     command:
@@ -193,27 +218,26 @@ services:
       timeout: 5s
       retries: 5
 
-
   catalog-database:
-        image: mysql:latest
-        environment: 
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: catalogdb
-            MYSQL_USER: user
-            MYSQL_PASSWORD: 1234
-        expose: 
-          - 3306
-        volumes: 
-            - ./sdu.bachelor.microservice.catalog/Data:/docker-entrypoint-initdb.d
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: catalogdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    expose:
+      - 3306
+    volumes:
+      - ./sdu.bachelor.microservice.catalog/Data:/docker-entrypoint-initdb.d
 
   order-database:
-        image: mysql:latest
-        environment: 
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: orderdb
-            MYSQL_USER: user
-            MYSQL_PASSWORD: 1234
-        expose: 
-          - 3306
-        volumes: 
-            - ./sdu.bachelor.microservice.order/Data:/docker-entrypoint-initdb.d
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: orderdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    expose:
+      - 3306
+    volumes:
+      - ./sdu.bachelor.microservice.order/Data:/docker-entrypoint-initdb.d

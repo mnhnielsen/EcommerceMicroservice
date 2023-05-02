@@ -80,7 +80,6 @@ namespace sdu.bachelor.microservice.catalog.Controllers
             productToReserve.Stock -= reservation.Quantity;
             await _catalogRepository.SaveChangesAsync();
             Console.WriteLine($"{reservation.Quantity} of the product {productToReserve.Title} has been reserved for the customer {reservation.CustomerId} at date: {DateTime.UtcNow}");
-            //Add to Reservation table
 
             return Ok();
         }
@@ -98,6 +97,28 @@ namespace sdu.bachelor.microservice.catalog.Controllers
                 return NotFound();
             }
 
+            var quantity = reservation.Quantity;
+
+            productToModify.Stock += quantity;
+            await _catalogRepository.SaveChangesAsync();
+            Console.WriteLine($"Order cancelled: {quantity} was added to {productToModify.Title}");
+
+            //Remove from reservationtable?
+            return Ok();
+        }
+
+        [Topic(PubSubName, Topics.On_Order_Cancel)]
+        [HttpPost("cancelorder")]
+        public async Task<IActionResult> CancelOrder([FromBody] Reservation reservation)
+        {
+            var productToModify = await _catalogRepository.GetProductAsync(reservation.ProductId);
+
+
+            if (productToModify == null)
+            {
+                return NotFound();
+            }
+            
             var quantity = reservation.Quantity;
 
             productToModify.Stock += quantity;

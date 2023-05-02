@@ -11,10 +11,8 @@ namespace sdu.bachelor.microservice.common
 
         public const string On_Checkout = "On_Checkout";
 
-        public const string On_Order_Added_To_Basket = "On_Order_Added_To_Basket";
         public const string On_Order_Cancel = "On_Order_Cancel";
         public const string On_Order_Submit = "On_Order_Submit";
-        public const string On_Order_Submit_Fail = "On_Order_Submit_Fail";
         public const string On_Order_Paid = "On_Order_Paid";
         public const string On_Order_Shipped = "On_Order_Shipped";
 
@@ -24,7 +22,6 @@ namespace sdu.bachelor.microservice.common
 
         public const string On_Payment_Reserved_Failed = "On_Payment_Reserved_Failed";
         public const string On_Payment_Reserved = "On_Payment_Reserved";
-        public const string On_Payment_Finalized = "On_Payment_Finalized";
 
     }
 }

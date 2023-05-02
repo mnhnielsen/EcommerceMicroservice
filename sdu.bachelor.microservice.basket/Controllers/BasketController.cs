@@ -32,14 +32,14 @@ namespace sdu.bachelor.microservice.basket.Controllers
             var state = await daprClient.GetStateEntryAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
 
             if (state.Value is not null)
-            { 
+            {
 
                 state.Value = reservation;
                 await state.SaveAsync();
             }
 
 
-            
+
             //Save in redis cache
             await daprClient.SaveStateAsync(BasketStoreName, reservation.CustomerId.ToString(), reservation);
             Console.WriteLine("Reservation Saved to Cache");
@@ -124,13 +124,14 @@ namespace sdu.bachelor.microservice.basket.Controllers
                 //Publish event
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Removed_From_Basket, resEvent, cancellationToken);
             }
-            return Accepted();
+            return Ok();
         }
 
         [Topic(PubSubName, Topics.On_Order_Submit)]
         [HttpPost("ordersubmitted")]
-        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, OrderPaymentInfoDto orderPaymentInfo)
+        public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, [FromBody] OrderPaymentDto orderPaymentInfo)
         {
+            Console.WriteLine("ORDER SUBMITTED, DELETING IN BASKET");
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken cancellationToken = source.Token;
             await daprClient.DeleteStateAsync(BasketStoreName, orderPaymentInfo.CustomerId.ToString(), cancellationToken: cancellationToken);
@@ -146,7 +147,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
                 return NotFound();
             //Console.WriteLine(JsonSerializer.Serialize(result.Result));
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Checkout, result.Result);
-            return Accepted();
+            return Ok();
         }
 
         [HttpGet("{id}")]
