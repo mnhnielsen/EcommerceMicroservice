@@ -73,6 +73,7 @@ namespace sdu.bachelor.microservice.order.Controllers
         [HttpPost("{id}")]
         public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, Guid id)
         {
+
             var order = await _orderRepository.GetOrderAsync(id);
             var finalOrder = _mapper.Map<Entities.Order>(order);
             finalOrder.OrderStatus = "Reserved";
@@ -81,6 +82,7 @@ namespace sdu.bachelor.microservice.order.Controllers
             var result = new OrderPaymentDto(finalOrder.CustomerId, finalOrder.OrderId, finalOrder.OrderStatus);
             Console.WriteLine(result);
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
+            Console.WriteLine("ORDER SUBMITTED");
 
             return Ok();
         }
@@ -103,6 +105,7 @@ namespace sdu.bachelor.microservice.order.Controllers
                 var orderToCancel = new OrderCancellationDto { CustomerId = result.CustomerId, ProductId = item.ProductId, Quantity = item.Quantity };
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Cancel, orderToCancel); // Fix
             }
+            Console.WriteLine("ORDER CANCELLED");
 
 
             return NoContent();
@@ -117,6 +120,8 @@ namespace sdu.bachelor.microservice.order.Controllers
             var finalOrder = _mapper.Map<Entities.Order>(orderToProcess);
             finalOrder.OrderStatus = order.OrderStatus;
             await _orderRepository.SaveChangesAsync();
+            Console.WriteLine("ORDER STATUS SET TO SHIPPED");
+
             return Ok();
         }
 
@@ -139,6 +144,7 @@ namespace sdu.bachelor.microservice.order.Controllers
                 var orderToCancel = new OrderCancellationDto { CustomerId = result.CustomerId, ProductId = item.ProductId, Quantity = item.Quantity };
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Cancel, orderToCancel);
             }
+            Console.WriteLine("ORDER STATUS SET TO CANCELLED DUE TO FAILED PAYMENT");
 
 
             return NoContent();

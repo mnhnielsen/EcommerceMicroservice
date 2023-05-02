@@ -26,8 +26,8 @@ namespace sdu.bachelor.microservice.shipping.Controllers
         [HttpPost]
         public async Task<ActionResult> PrepareOrder([FromServices] DaprClient daprClient, [FromBody] OrderPaymentDto orderStatus)
         {
-            Console.WriteLine($"Shipping: Recieved an order with status of: {orderStatus.OrderStatus} from order {orderStatus.OrderId}");
-            Console.WriteLine($"Shipping: Shipping ID Placed: {Guid.NewGuid()}");
+            Console.WriteLine($"SHIPPING: Recieved an order with status of: {orderStatus.OrderStatus} from order {orderStatus.OrderId}");
+            Console.WriteLine($"SHIPPING: Shipping ID Placed: {Guid.NewGuid()}");
 
             var result = new OrderPaymentDto { OrderId = orderStatus.OrderId, CustomerID = orderStatus.CustomerID, OrderStatus = "Shipped" };
 

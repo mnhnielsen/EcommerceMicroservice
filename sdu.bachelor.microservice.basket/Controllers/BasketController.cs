@@ -131,6 +131,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
         [HttpPost("ordersubmitted")]
         public async Task<ActionResult> RemoveWhenOrderSubmitted([FromServices] DaprClient daprClient, [FromBody] OrderPaymentDto orderPaymentInfo)
         {
+            Console.WriteLine("ORDER SUBMITTED, DELETING IN BASKET");
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken cancellationToken = source.Token;
             await daprClient.DeleteStateAsync(BasketStoreName, orderPaymentInfo.CustomerId.ToString(), cancellationToken: cancellationToken);
