@@ -80,7 +80,7 @@ namespace sdu.bachelor.microservice.order.Controllers
             await _orderRepository.SaveChangesAsync();
 
             var result = new OrderPaymentDto(finalOrder.CustomerId, finalOrder.OrderId, finalOrder.OrderStatus);
-            Console.WriteLine(result);
+            
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
             Console.WriteLine("ORDER SUBMITTED");
 
@@ -108,7 +108,7 @@ namespace sdu.bachelor.microservice.order.Controllers
             Console.WriteLine("ORDER CANCELLED");
 
 
-            return NoContent();
+            return Ok();
         }
 
         [Topic(PubSubName, Topics.On_Order_Shipped)]
@@ -147,7 +147,7 @@ namespace sdu.bachelor.microservice.order.Controllers
             Console.WriteLine("ORDER STATUS SET TO CANCELLED DUE TO FAILED PAYMENT");
 
 
-            return NoContent();
+            return Ok();
         }
 
 

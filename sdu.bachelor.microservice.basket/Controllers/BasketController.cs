@@ -124,7 +124,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
                 //Publish event
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Removed_From_Basket, resEvent, cancellationToken);
             }
-            return Accepted();
+            return Ok();
         }
 
         [Topic(PubSubName, Topics.On_Order_Submit)]
@@ -147,7 +147,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
                 return NotFound();
             //Console.WriteLine(JsonSerializer.Serialize(result.Result));
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Checkout, result.Result);
-            return Accepted();
+            return Ok();
         }
 
         [HttpGet("{id}")]

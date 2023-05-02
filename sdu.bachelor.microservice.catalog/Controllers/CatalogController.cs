@@ -118,7 +118,7 @@ namespace sdu.bachelor.microservice.catalog.Controllers
             {
                 return NotFound();
             }
-
+            
             var quantity = reservation.Quantity;
 
             productToModify.Stock += quantity;

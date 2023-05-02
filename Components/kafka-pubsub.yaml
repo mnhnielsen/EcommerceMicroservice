@@ -9,7 +9,7 @@ spec:
   - name: brokers # Required. Kafka broker connection setting
     value: "broker:9092"
   - name: consumerGroup # Optional. Used for input bindings.
-    value: "group1"
+    value: "{namespace}"
   - name: clientID # Optional. Used as client tracing ID by Kafka brokers.
     value: "my-dapr-app-id"
   - name: authType # Required.

@@ -58,7 +58,7 @@ namespace sdu.bachelor.microservice.payment.Controllers
             //Publish On_Order_Paid
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Paid, orderPaymentInfoDto);
             //throw new NotImplementedException(nameof(FinalizePayment));
-            return NoContent();
+            return Ok();
         }
 
 
