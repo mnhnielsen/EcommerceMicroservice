@@ -26,6 +26,7 @@ CREATE TABLE Customers(
 	Address VARCHAR(255) NOT NULL
 );
 
+INSERT INTO Orders VALUES("390601d0-46f7-4618-9a4e-86213d5d5eb1", "3dea5bb2-9f8d-4c7f-9a97-e00de86f546d", "Pending");
 
 
 -- INSERT INTO OrderItems VALUES("3dea5bb2-9f8d-4c7f-9a97-e00de86f546d", "7201fd50-25b9-4b7d-99a7-b367b73222f8", 10000.0, 1);

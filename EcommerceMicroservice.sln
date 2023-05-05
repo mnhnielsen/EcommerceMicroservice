@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.p
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.common", "sdu.bachelor.microservice.common\sdu.bachelor.microservice.common.csproj", "{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.mircroservice.order.Tests", "sdu.mircroservice.order.Tests\sdu.mircroservice.order.Tests.csproj", "{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,5 +105,17 @@ Global
 		{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}.Release|x64.Build.0 = Release|Any CPU
 		{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}.Release|x86.ActiveCfg = Release|Any CPU
 		{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}.Release|x86.Build.0 = Release|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Debug|x64.Build.0 = Debug|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Debug|x86.Build.0 = Debug|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Release|x64.ActiveCfg = Release|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Release|x64.Build.0 = Release|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFE0F3C5-F78C-40E7-8CB3-FEF824F5EDCE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
