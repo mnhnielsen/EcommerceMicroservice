@@ -52,10 +52,12 @@ services:
         "-placement-host-address",
         "dapr-placement:50000",
         "-components-path",
-        "./components"
+        "./dapr/components",
+        "-config",
+        "./dapr/config.yaml"
       ]
     volumes:
-      - "./components/:/components"
+      - "./dapr/:/dapr"
     depends_on:
       "broker":
         condition: service_healthy
@@ -87,10 +89,12 @@ services:
         "-placement-host-address",
         "dapr-placement:50000",
         "-components-path",
-        "./components"
+        "./dapr/components",
+        "-config",
+        "./dapr/config.yaml"
       ]
     volumes:
-      - "./components/:/components"
+      - "./dapr/:/dapr"
     depends_on:
       "broker":
         condition: service_healthy
@@ -120,10 +124,12 @@ services:
         "-placement-host-address",
         "dapr-placement:50000",
         "-components-path",
-        "./components"
+        "./dapr/components",
+        "-config",
+        "./dapr/config.yaml"
       ]
     volumes:
-      - "./components/:/components"
+      - "./dapr/:/dapr"
     depends_on:
       "broker":
         condition: service_healthy
@@ -153,10 +159,12 @@ services:
         "-placement-host-address",
         "dapr-placement:50000",
         "-components-path",
-        "./components"
+        "./dapr/components",
+        "-config",
+        "./dapr/config.yaml"
       ]
     volumes:
-      - "./components/:/components"
+      - "./dapr/:/dapr"
     depends_on:
       "broker":
         condition: service_healthy
@@ -186,10 +194,12 @@ services:
         "-placement-host-address",
         "dapr-placement:50000",
         "-components-path",
-        "./components"
+        "./dapr/components",
+        "-config",
+        "./dapr/config.yaml"
       ]
     volumes:
-      - "./components/:/components"
+      - "./dapr/:/dapr"
     depends_on:
       "broker":
         condition: service_healthy
@@ -241,3 +251,7 @@ services:
       - 3306
     volumes:
       - ./sdu.bachelor.microservice.order/Data:/docker-entrypoint-initdb.d
+  zipkin:
+    image: "openzipkin/zipkin"
+    ports:
+      - "9411:9411"
