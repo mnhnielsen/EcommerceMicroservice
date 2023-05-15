@@ -24,6 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\sdu.bachelor.microservice.order\sdu.bachelor.microservice.order.csproj" />
+	  <ProjectReference Include="..\sdu.bachelor.microservice.basket\sdu.bachelor.microservice.basket.csproj" />
+
   </ItemGroup>
 
 </Project>
