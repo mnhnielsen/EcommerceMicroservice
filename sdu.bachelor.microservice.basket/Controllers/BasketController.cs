@@ -37,12 +37,10 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
             if (state.Value is not null)
             {
-                //Add to basket if basket exists.
                 state.Value = reservation;
                 await state.SaveAsync();
             }
 
-            //Save in redis cache
             await daprClient.SaveStateAsync(BasketStoreName, reservation.CustomerId.ToString(), reservation);
             _logger.LogInformation("Reservation Saved to Cache");
 
@@ -50,15 +48,10 @@ namespace sdu.bachelor.microservice.basket.Controllers
             {
                 var reservationEvent = new ReservationEvent() { CustomerId = reservation.CustomerId, Quantity = item.Quantity, ProductId = item.ProductId };
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Reserved, reservationEvent);
+                _logger.LogInformation($"Product with id {item.ProductId} for customer with id {reservation.CustomerId}");
             }
 
 
-            //Publish event with the data stored in redis.
-            var result = await daprClient.GetStateAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
-            foreach (var item in reservation.Products)
-            {
-                _logger.LogInformation($"Product with id {item.ProductId} for customer with id {result.CustomerId}");
-            }
             return Ok(reservation);
         }
 
