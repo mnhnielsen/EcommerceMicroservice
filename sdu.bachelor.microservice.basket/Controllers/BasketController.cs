@@ -87,7 +87,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
             await daprClient.DeleteStateAsync(BasketStoreName, result.CustomerId.ToString(), cancellationToken: cancellationToken);
 
-            Console.WriteLine($"{result.CustomerId} was deleted from the basket service");
+            _logger.LogInformation($"{result.CustomerId} was deleted from the basket service");
             return Ok();
         }
 
