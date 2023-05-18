@@ -53,7 +53,7 @@ namespace sdu.bachelor.microservice.order.Controllers
 
 
         [Topic(PubSubName, Topics.On_Checkout)]
-        [HttpPost("initorder")]
+        [HttpPost("initorder", Name = "PostOrder")]
         public async Task<ActionResult> InitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
             _logger.LogInformation($"New Orders: Customer: {order.CustomerId}");
