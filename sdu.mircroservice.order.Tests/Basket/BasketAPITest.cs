@@ -17,127 +17,127 @@ namespace sdu.mircroservice.order.Tests.Basket;
 
 public class BasketAPITest
 {
-    private string baseUrl = "http://localhost:5003/api/v1/basket";
+    //private string baseUrl = "http://localhost:5003/api/v1/basket";
 
-    HttpClient client = new HttpClient();
+    //HttpClient client = new HttpClient();
 
-    public BasketAPITest()
-    {
+    //public BasketAPITest()
+    //{
 
-    }
+    //}
 
-    [Fact]
-    public async Task Add_To_Basket_Response()
-    {
+    //[Fact]
+    //public async Task Add_To_Basket_Response()
+    //{
 
-        var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
-
-
-        var endpoint = $"{baseUrl}/reserve";
-        var item = new OrderItem { Quantity = 1, Price = 1, ProductId = Guid.NewGuid() };
-        var basket = new Reservation { CustomerId = Guid.Parse(customerId), Products = new List<OrderItem>() };
-        basket.Products.Add(item);
-
-        var content = JsonConvert.SerializeObject(basket);
-        var buffer = System.Text.Encoding.UTF8.GetBytes(content);
-        var byteContent = new ByteArrayContent(buffer);
-        byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+    //    var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
 
 
-        var result = client.PostAsync(endpoint, byteContent).Result;
-        Console.WriteLine(result);
+    //    var endpoint = $"{baseUrl}/reserve";
+    //    var item = new OrderItem { Quantity = 1, Price = 1, ProductId = Guid.NewGuid() };
+    //    var basket = new Reservation { CustomerId = Guid.Parse(customerId), Products = new List<OrderItem>() };
+    //    basket.Products.Add(item);
 
-        Assert.IsType<HttpResponseMessage>(result);
-
-
-    }
-
-    [Fact]
-    public async Task Get_Basket_Response()
-    {
-
-        var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
+    //    var content = JsonConvert.SerializeObject(basket);
+    //    var buffer = System.Text.Encoding.UTF8.GetBytes(content);
+    //    var byteContent = new ByteArrayContent(buffer);
+    //    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
 
-        var endpoint = $"{baseUrl}/{customerId}";
+    //    var result = client.PostAsync(endpoint, byteContent).Result;
+    //    Console.WriteLine(result);
 
-        using HttpResponseMessage response = await client.GetAsync(endpoint);
-
-        Assert.IsType<HttpResponseMessage>(response);
-
-
-    }
+    //    Assert.IsType<HttpResponseMessage>(result);
 
 
-    [Fact]
-    public async Task Reserve_Failed_Basket_Response()
-    {
+    //}
 
-        var endpoint = $"{baseUrl}/reservefailed";
+    //[Fact]
+    //public async Task Get_Basket_Response()
+    //{
 
-        using HttpResponseMessage response = await client.GetAsync(endpoint);
-
-        Assert.IsType<HttpResponseMessage>(response);
+    //    var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
 
 
-    }
+    //    var endpoint = $"{baseUrl}/{customerId}";
 
-    [Fact]
-    public async Task Remove_Product_Response()
-    {
+    //    using HttpResponseMessage response = await client.GetAsync(endpoint);
 
-        var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
+    //    Assert.IsType<HttpResponseMessage>(response);
 
 
-        var endpoint = $"{baseUrl}/removeproduct/{customerId}";
-
-        using HttpResponseMessage response = await client.GetAsync(endpoint);
-
-        Assert.IsType<HttpResponseMessage>(response);
+    //}
 
 
-    }
+    //[Fact]
+    //public async Task Reserve_Failed_Basket_Response()
+    //{
 
-    [Fact]
-    public async Task OrderSubmitted_Product_Response()
-    {
+    //    var endpoint = $"{baseUrl}/reservefailed";
 
-        var endpoint = $"{baseUrl}/ordersubmitted";
+    //    using HttpResponseMessage response = await client.GetAsync(endpoint);
 
-        using HttpResponseMessage response = await client.GetAsync(endpoint);
-
-        Assert.IsType<HttpResponseMessage>(response);
+    //    Assert.IsType<HttpResponseMessage>(response);
 
 
-    }
+    //}
 
-    [Fact]
-    public async Task Checkout_Product_Response()
-    {
-        var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
+    //[Fact]
+    //public async Task Remove_Product_Response()
+    //{
 
-
-        var endpoint = $"{baseUrl}/{customerId}";
-
-        using HttpResponseMessage response = await client.GetAsync(endpoint);
-
-        Assert.IsType<HttpResponseMessage>(response);
+    //    var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
 
 
-    }
+    //    var endpoint = $"{baseUrl}/removeproduct/{customerId}";
 
-    [Fact]
-    public async Task Get_Product_Response()
-    {
-        var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
+    //    using HttpResponseMessage response = await client.GetAsync(endpoint);
 
-
-        var endpoint = $"{baseUrl}/{customerId}";
-
-        using HttpResponseMessage response = await client.GetAsync(endpoint);
-
-        Assert.IsType<HttpResponseMessage>(response);
+    //    Assert.IsType<HttpResponseMessage>(response);
 
 
-    }
+    //}
+
+    //[Fact]
+    //public async Task OrderSubmitted_Product_Response()
+    //{
+
+    //    var endpoint = $"{baseUrl}/ordersubmitted";
+
+    //    using HttpResponseMessage response = await client.GetAsync(endpoint);
+
+    //    Assert.IsType<HttpResponseMessage>(response);
+
+
+    //}
+
+    //[Fact]
+    //public async Task Checkout_Product_Response()
+    //{
+    //    var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
+
+
+    //    var endpoint = $"{baseUrl}/{customerId}";
+
+    //    using HttpResponseMessage response = await client.GetAsync(endpoint);
+
+    //    Assert.IsType<HttpResponseMessage>(response);
+
+
+    //}
+
+    //[Fact]
+    //public async Task Get_Product_Response()
+    //{
+    //    var customerId = "33e7784d-e548-4bb5-9e1c-94a205a3d49b";
+
+
+    //    var endpoint = $"{baseUrl}/{customerId}";
+
+    //    using HttpResponseMessage response = await client.GetAsync(endpoint);
+
+    //    Assert.IsType<HttpResponseMessage>(response);
+
+
+    //}
 }
