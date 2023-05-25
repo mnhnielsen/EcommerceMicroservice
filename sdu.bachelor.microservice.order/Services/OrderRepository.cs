@@ -14,6 +14,11 @@ public class OrderRepository : IOrderRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
+    public void AddCustomer(Customer customer)
+    {
+        _context.Add(customer);
+    }
+
     public void AddOrder(Order order)
     {
         _context.Add(order);

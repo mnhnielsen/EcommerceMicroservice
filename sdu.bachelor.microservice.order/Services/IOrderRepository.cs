@@ -13,6 +13,8 @@ namespace sdu.bachelor.microservice.order.Services
         void DeleteOrder(Order order);
 
         Task AddProductToOrderAsync(Guid orderId, OrderItem item);
+
+        void AddCustomer(Customer customer);
         
     }
 }

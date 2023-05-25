@@ -12,6 +12,7 @@ public class Order
 
     //public DateTime OrderTime { get; set; }
     public string OrderStatus { get; set; } = "Pending";
+
     public ICollection<OrderItem> Products { get; set; } = new List<OrderItem>();
 
 

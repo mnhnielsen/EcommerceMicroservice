@@ -3,25 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.catalog", "sdu.bachelor.microservice.catalog\sdu.bachelor.microservice.catalog.csproj", "{AA78033E-B75F-4238-A577-DD8D38C87CA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdu.bachelor.microservice.catalog", "sdu.bachelor.microservice.catalog\sdu.bachelor.microservice.catalog.csproj", "{AA78033E-B75F-4238-A577-DD8D38C87CA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.order", "sdu.bachelor.microservice.order\sdu.bachelor.microservice.order.csproj", "{57C51AD8-6A29-4E57-87C8-0ABE217EA662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdu.bachelor.microservice.order", "sdu.bachelor.microservice.order\sdu.bachelor.microservice.order.csproj", "{57C51AD8-6A29-4E57-87C8-0ABE217EA662}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.basket", "sdu.bachelor.microservice.basket\sdu.bachelor.microservice.basket.csproj", "{34FB1A92-2C3C-4CD2-BBFB-A8DE993B4B2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdu.bachelor.microservice.basket", "sdu.bachelor.microservice.basket\sdu.bachelor.microservice.basket.csproj", "{34FB1A92-2C3C-4CD2-BBFB-A8DE993B4B2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.shipping", "sdu.bachelor.microservice.shipping\sdu.bachelor.microservice.shipping.csproj", "{36E11761-F310-4E50-AD86-1A1BEA012FC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdu.bachelor.microservice.shipping", "sdu.bachelor.microservice.shipping\sdu.bachelor.microservice.shipping.csproj", "{36E11761-F310-4E50-AD86-1A1BEA012FC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.payment", "sdu.bachelor.microservice.payment\sdu.bachelor.microservice.payment.csproj", "{856C8656-F2C4-4974-B8AC-457F763096B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdu.bachelor.microservice.payment", "sdu.bachelor.microservice.payment\sdu.bachelor.microservice.payment.csproj", "{856C8656-F2C4-4974-B8AC-457F763096B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sdu.bachelor.microservice.common", "sdu.bachelor.microservice.common\sdu.bachelor.microservice.common.csproj", "{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdu.bachelor.microservice.common", "sdu.bachelor.microservice.common\sdu.bachelor.microservice.common.csproj", "{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderServiceTests", "OrderServiceTests\OrderServiceTests.csproj", "{335D4AFC-270F-4D3A-B81F-A614226B53AE}"
 EndProject
 Global
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {042E359C-044F-416B-9DD1-7734BE49C090}
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -103,5 +99,23 @@ Global
 		{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}.Release|x64.Build.0 = Release|Any CPU
 		{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}.Release|x86.ActiveCfg = Release|Any CPU
 		{7B252FB5-1CB1-42B5-839C-80C3BFD906F3}.Release|x86.Build.0 = Release|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Debug|x64.Build.0 = Debug|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Debug|x86.Build.0 = Debug|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Release|x64.ActiveCfg = Release|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Release|x64.Build.0 = Release|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{335D4AFC-270F-4D3A-B81F-A614226B53AE}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {042E359C-044F-416B-9DD1-7734BE49C090}
 	EndGlobalSection
 EndGlobal

@@ -25,41 +25,33 @@ namespace sdu.bachelor.microservice.basket.Controllers
             return "Connected Basket-Service";
         }
 
-        //Add Product to basket. Uses the topic On_Product_Reserved.
         [HttpPost("reserve")]
         public async Task<ActionResult> AddProductToBasket([FromServices] DaprClient daprClient, [FromBody] Reservation reservation)
         {
+            if(reservation.Products is null)
+            {
+                return NotFound();
+            }
+
             var state = await daprClient.GetStateEntryAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
 
             if (state.Value is not null)
             {
-
                 state.Value = reservation;
                 await state.SaveAsync();
             }
 
-
-
-            //Save in redis cache
             await daprClient.SaveStateAsync(BasketStoreName, reservation.CustomerId.ToString(), reservation);
-            Console.WriteLine("Reservation Saved to Cache");
-
-
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken cancellationToken = source.Token;
+            _logger.LogInformation("Reservation Saved to Cache");
 
             foreach (var item in reservation.Products)
             {
-                var resEvent = new ReservationEvent() { CustomerId = reservation.CustomerId, Quantity = item.Quantity, ProductId = item.ProductId };
-                await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Reserved, resEvent, cancellationToken);
+                var reservationEvent = new ReservationEvent() { CustomerId = reservation.CustomerId, Quantity = item.Quantity, ProductId = item.ProductId };
+                await daprClient.PublishEventAsync(PubSubName, Topics.On_Product_Reserved, reservationEvent);
+                _logger.LogInformation($"Product with id {item.ProductId} for customer with id {reservation.CustomerId}");
             }
-            //Publish event
 
-            var result = await daprClient.GetStateAsync<Reservation>(BasketStoreName, reservation.CustomerId.ToString());
-            foreach (var item in reservation.Products)
-            {
-                Console.WriteLine($"Product with id {item.ProductId} for customer with id {result.CustomerId}");
-            }
+
             return Ok(reservation);
         }
 
@@ -95,7 +87,7 @@ namespace sdu.bachelor.microservice.basket.Controllers
 
             await daprClient.DeleteStateAsync(BasketStoreName, result.CustomerId.ToString(), cancellationToken: cancellationToken);
 
-            Console.WriteLine($"{result.CustomerId} was deleted from the basket service");
+            _logger.LogInformation($"{result.CustomerId} was deleted from the basket service");
             return Ok();
         }
 

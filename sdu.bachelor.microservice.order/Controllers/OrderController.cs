@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
 using sdu.bachelor.microservice.common;
+using sdu.bachelor.microservice.order.Entities;
 using sdu.bachelor.microservice.order.Models;
 using sdu.bachelor.microservice.order.Services;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace sdu.bachelor.microservice.order.Controllers
 {
@@ -51,13 +53,13 @@ namespace sdu.bachelor.microservice.order.Controllers
 
 
         [Topic(PubSubName, Topics.On_Checkout)]
-        [HttpPost("initorder")]
+        [HttpPost("initorder", Name = "PostOrder")]
         public async Task<ActionResult> InitOrder([FromServices] DaprClient daprClient, OrderForCreationDto order)
         {
-            Console.WriteLine($"Found {order.Products.Count} items in customer with ID of {order.CustomerId}");
+            _logger.LogInformation($"New Orders: Customer: {order.CustomerId}");
 
             var finalOrder = _mapper.Map<Entities.Order>(order);
-            Console.WriteLine($"Made new orderid {finalOrder.OrderId}");
+            _logger.LogInformation($"Made new orderid {finalOrder.OrderId}");
             foreach (var item in finalOrder.Products)
             {
                 item.OrderId = finalOrder.OrderId;
@@ -71,18 +73,23 @@ namespace sdu.bachelor.microservice.order.Controllers
 
 
         [HttpPost("{id}")]
-        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, Guid id)
+        public async Task<ActionResult> SubmitOrder([FromServices] DaprClient daprClient, Guid id, [FromBody] CustomerDto customer)
         {
 
             var order = await _orderRepository.GetOrderAsync(id);
             var finalOrder = _mapper.Map<Entities.Order>(order);
+
             finalOrder.OrderStatus = "Reserved";
+
+            var customerToSave = new Customer { CustomerId = finalOrder.CustomerId, Name = customer.Name, Mail = customer.Mail, Address=customer.Address};
+
+            _orderRepository.AddCustomer(customerToSave);
             await _orderRepository.SaveChangesAsync();
 
             var result = new OrderPaymentDto(finalOrder.CustomerId, finalOrder.OrderId, finalOrder.OrderStatus);
             
             await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Submit, result);
-            Console.WriteLine("ORDER SUBMITTED");
+            _logger.LogInformation("ORDER SUBMITTED");
 
             return Ok();
         }
@@ -132,11 +139,11 @@ namespace sdu.bachelor.microservice.order.Controllers
             var result = await _orderRepository.GetOrderAsync(order.OrderId);
             if (!await _orderRepository.OrderExistsAsync(result.OrderId))
             {
-                Console.WriteLine("Order Not Found");
+                _logger.LogInformation("Order Not Found");
                 return NotFound();
             }
             var orderToUpdate = _mapper.Map<Entities.Order>(result);
-            orderToUpdate.OrderStatus = "Cancelled";
+            orderToUpdate.OrderStatus = "Canceled";
             await _orderRepository.SaveChangesAsync();
 
             foreach (var item in result.Products)
@@ -144,7 +151,7 @@ namespace sdu.bachelor.microservice.order.Controllers
                 var orderToCancel = new OrderCancellationDto { CustomerId = result.CustomerId, ProductId = item.ProductId, Quantity = item.Quantity };
                 await daprClient.PublishEventAsync(PubSubName, Topics.On_Order_Cancel, orderToCancel);
             }
-            Console.WriteLine("ORDER STATUS SET TO CANCELLED DUE TO FAILED PAYMENT");
+            _logger.LogInformation("ORDER STATUS SET TO CANCELLED DUE TO FAILED PAYMENT");
 
 
             return Ok();

@@ -7,6 +7,7 @@ public class OrderContext : DbContext
 {
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<Customer> Customers { get; set; }
     protected readonly IConfiguration Configuration;
 
 
@@ -14,4 +15,18 @@ public class OrderContext : DbContext
     {
         Configuration = configuration;
     }
+
+    public OrderContext(DbContextOptions options) : base(options)
+    {
+        
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Order>().HasKey(e => e.OrderId);
+        base.OnModelCreating(modelBuilder);
+    }
+
+
+
 }
