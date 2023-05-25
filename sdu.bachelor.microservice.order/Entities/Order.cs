@@ -6,7 +6,7 @@ namespace sdu.bachelor.microservice.order.Entities;
 
 public class Order
 {
-    public Guid OrderId { get; set; } = Guid.NewGuid();
+    public Guid OrderId { get;} = Guid.NewGuid();
 
     public Guid CustomerId { get; set; }
 
