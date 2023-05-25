@@ -16,6 +16,17 @@ public class OrderContext : DbContext
         Configuration = configuration;
     }
 
-    
+    public OrderContext(DbContextOptions options) : base(options)
+    {
+        
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Order>().HasKey(e => e.OrderId);
+        base.OnModelCreating(modelBuilder);
+    }
+
+
 
 }
