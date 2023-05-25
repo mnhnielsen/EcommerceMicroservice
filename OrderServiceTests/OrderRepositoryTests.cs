@@ -1,16 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using sdu.bachelor.microservice.order.DbContexts;
 using sdu.bachelor.microservice.order.Entities;
 using sdu.bachelor.microservice.order.Services;
-using Xunit;
 
-namespace sdu.bachelor.microservice.order.Tests;
+namespace OrderServiceTests;
 
-public class RepositoryTests
+public class OrderRepositoryTests
 {
     private readonly OrderContext context;
 
-    public RepositoryTests()
+    public OrderRepositoryTests()
     {
         DbContextOptionsBuilder dbContextOptionsBuilder = new DbContextOptionsBuilder().UseInMemoryDatabase("orderdb");
         context = new OrderContext(dbContextOptionsBuilder.Options);
@@ -22,12 +21,16 @@ public class RepositoryTests
         //Arrange
         var customerId = Guid.NewGuid();
         var repo = new OrderRepository(context);
-        var order = new Order() {CustomerId = customerId};
+        var order = new Order() { CustomerId = customerId };
+
+        repo.AddOrder(order);
+        await repo.SaveChangesAsync();
 
         //Arrange
         var result = await repo.GetOrderAsync(order.OrderId);
 
         //Assert
+        Assert.NotNull(result);
         Assert.Equal(customerId, result.CustomerId);
     }
 }
