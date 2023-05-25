@@ -24,7 +24,7 @@ public class OrderRepositoryTests
         repo.AddOrder(order);
         await repo.SaveChangesAsync();
 
-        //Arrange
+        //Act
         var result = await repo.GetOrderAsync(order.OrderId);
 
         //Assert
